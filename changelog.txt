@@ -1,0 +1,60 @@
+#################
+#   APOCRYPHA   #
+#   CHANGELOG   #
+#    V.1.7.9    #
+#################
+[Sept. 2, 2021] 1.7.1 --> 1.7.5
+{AD} Administrative Distribution
+ + Added (changelog.txt) file to record all changes to the program
+ + Added {main()} function to add recursive trying fail state functionality
+ + Added Administrative Distribution Internal Documentation [ADID] Framework
+{PriD} Private Distribution
+~+ Going to create (pd_Apocrypha.py) file for parity, currently on standby for forking from the master
+{PD} Public Distribution
+~+ Going to create (CRYphoAPA.py) file for parity, currently on standby for forking from the master.
+
+[Oct. 19, 2021] 1.7.5 --> 1.7.6
+{AD} Administrative Distribution
+ ~ Modified behavior of gentype input processing to be more robust with handling inputs with unexpected results.
+~+ Working to rework the method by which content is processed to be used as a key
+    to later allow for the use of expanded hashing of any string as a key
+
+[Oct. 25, 2021] 1.7.6 --> 1.7.7
+{AD}
+ ~ Modified old way of determining file extension to just use slicing instead of needlessly complex lambda function
+~+ Added more comments for future implementation of features, such as one-time warning of character case-modding
+ ~ Semantic changes to comments for clarity
+ ~ Modified Y/N input options which checks for any input with a first letter equal to 'y' after lowering and stripping.
+    Making Y/N input options more robust and resilient towards whitespace.
+ ~ Modified Aencode2 key check to check for .txt, .json, and .apoc file extension endings to prevent webbrowser opening.
+~~~Planned future implementation of config file with options such as whether to mod character case.
+~~~Possible future implementation of multiple inputs and outputs being recorded to a file, perhaps set via config
+    as a .txt, .json, or perhaps a custom file type (which could be saved as a binary as an option as well)
+
+[Nov. 2, 2021] 1.7.7 --> 1.7.8
+{AD}
+ + Uncommented and added import packages for future expanded hashing implementation and config handling.
+ + Uncommented and added Config class and config_handler function to create and read a .json config file.
+ - Removed commented out legacy code for determining file extension in Adecode1 function
+ + Uncommented and added the expanded hashing function for generating a key.
+ + Added documentation for all previously not docstringed functions and objects.
+ + Added options and changed print statements for future implementations.
+[Same Day] 1.7.8 --> 1.7.9
+{AD}
+ + Added config handling implementation and improved it's handling of inputs
+ + Added initial 'C' option for A_func prompt.
+ + Added automatic restart after config has been handled.
+
+[Nov. 3, 2021] 1.7.9 --> 1.8.0
+{AD}
+ + Added config parameters to functions to allow for config use and updated error catching recursion arguments.
+ ~ Changed the config handler to allow for an empty string and check for an existing config.json in the root directory.
+ + Added force_case option to Config class and integrated it with configuration framework.
+
+For the future implementation:
+- Add support for file I/O for messages, and then add a JSON format
+- Expanded custom key could scale proportionally for each given message?
+- Config file with options such as whether to mod character case.
+- Multiple inputs and outputs being recorded to a file, perhaps set via config as a .txt, .json,
+    or perhaps a custom file type (which could be saved as a binary as an option as well)
+- Add other distro functionality in AD able to be tested via the config file so the file itself doesn't have to be run.

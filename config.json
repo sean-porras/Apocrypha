@@ -1,0 +1,8 @@
+{
+    "allow_cmdln": true,
+    "casemod": false,
+    "force_case": true,
+    "lower_msg": true,
+    "multi_in": false,
+    "output": "print"
+}
