@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.8.2    #
+#    V.1.8.4    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -76,3 +76,9 @@ For the future implementation:
  ~ Handled IndexError possibilities with error messages if enter were pressed for Retry prompts.
  ~ Fixed logic error in force_case handling the 'msg' option without regard to force_msg_case config option.
 +~ Updated external documentation.
+
+[Dec. 20, 2021] 1.8.3 --> 1.8.4
+{AD}
+ ~ Fixed bug with key variable not being defined in 'file' encryption method
+ ~ Fixed incorrect version being displayed for all documents
++~ Updated internal documentation.

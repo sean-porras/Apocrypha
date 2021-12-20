@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.3    #
+#    V.1.8.4    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -47,6 +47,9 @@ class Config:
         containing commands for each separate result. ### CURRENTLY UNIMPLEMENTED ###
     output: default 'print'. Dictates what form the output of Apoc will be given as. Currently
         only supports printing the output. Future support for .txt, .json, and .apoc formats.
+    force_msg_case: default False. Dictates whether or not Apoc will force all characters to be either all
+        uppercase or all lowercase when using the `msg` encryption option. Must be used in conjunction with
+        `force_case` to take effect.
     """
     allow_cmdln: bool = True
     casemod: bool = False
@@ -134,7 +137,7 @@ def Aencode1(config: Config) -> str or None:
     """
     Generates and returns a key to be used for encryption in Aencode2.
     :param config: Config obj; Config object which allows for config options to be utilized.
-    :return: str (valid link) or None (indicative of txt, json, or apoc file)
+    :return: str (valid link or custom key) or None (indicative of txt, json, or apoc file)
     """
     gentype = input("eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: ")
     gentype = gentype.lower().strip()
@@ -217,9 +220,9 @@ def Aencode1(config: Config) -> str or None:
 
 def Aencode2(config: Config, key: str or None) -> None:
     """
-    Given a key of either a valid link or a NoneType, processes to encrypt and print the output.
+    Given a key of either a valid link, custom key, or a NoneType, processes to encrypt and print the output.
     :param config: Config obj; Config object which allows for config options to be utilized
-    :param key: str or None; str is indicative of a valid link, None is indicative of a file being used
+    :param key: str or None; str is indicative of a valid link or custom key, None is indicative of a file being used
     """
     if key is not None and key[-4:] not in [".txt", ".msg"] and key[-5:] not in [".json", ".apoc"]:
         print("The link to the key will now open, when you have downloaded the file, press enter")
@@ -235,6 +238,7 @@ def Aencode2(config: Config, key: str or None) -> None:
             fileloc = ''
     else:
         fileloc = input("eA_filepath = ")
+        key = fileloc
     if (Path(fileloc).exists() and fileloc != '') or key[-4:] == ".msg":
         if fileloc[-4:] in [".txt", ".msg"] or fileloc[-5:] in [".json", ".apoc"]:
             pass
@@ -342,16 +346,17 @@ def Aencode2(config: Config, key: str or None) -> None:
     c. Admin Dist: Current version, no restrictions, updated for parity features [X]
   14. Create failsafe if ch is not found, end program, prompt for retry with a new key [X]
   15. Create administrative documentation and changelog for posterity [WIP]
-  16. Implement a function which simply uses any key to securely use with current method [WIP]
+  16. Implement a function which simply uses any key to securely use with current method [X]
+  17. Implement whole base program command line functionality [ ]
   99. Create a new version which simply uses any key to securely use with no fail state. (Similar to AES) [ ]
 '''
 
 
 def Adecode2(config: Config, fileloc: str) -> None:
     """
-    Given a valid file location, prompts for an encrypted message to decrypt and print the results.
+    Given a valid file location or custom key, prompts for an encrypted message to decrypt and print the results.
     :param config: Config obj; Config object which allows for config options to be utilized.
-    :param fileloc: Str; valid Path where the file is a .txt file
+    :param fileloc: Str; valid Path where the file is a .txt file or a custom key passed through with appended '.msg'
     :return: None; Final function using the Adecode1 helper function, prints to console.
     """
     try:
@@ -498,9 +503,9 @@ def Adecode2(config: Config, fileloc: str) -> None:
 def Adecode1(config: Config) -> str:
     """
     Helper function which starts the decryption process and prompts the user to return the path
-    of a valid file path (.txt required in Adecode2).
+    of a valid file path (.txt required in Adecode2) or input a custom key.
     :param config: Config obj; Config object which allows for config options to be utilized.
-    :return: Str; File path to be processed by Adecode2
+    :return: Str; File path or key with appended '.msg' string to be processed by Adecode2
     """
     keyformat = input("dA_k.format[<link{full;param};file;msg>]: ")
     keyformat = keyformat.lower()
@@ -590,7 +595,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.8.3")
+    print("A_version: 1.8.4")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()
