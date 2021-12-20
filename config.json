@@ -5,5 +5,5 @@
     "lower_msg": true,
     "multi_in": false,
     "output": "print",
-    "override_msg_case": false
+    "force_msg_case": false
 }

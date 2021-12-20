@@ -6,7 +6,7 @@
 
 ## Abstract
 
-![version](https://img.shields.io/badge/verison-1.8.0-blue.svg)
+![version](https://img.shields.io/badge/verison-1.8.3-blue.svg)
 
 This document serves to explain the processes and uses in-depth
 of each function and object.
@@ -43,6 +43,9 @@ forced to all lowercase, otherwise forces to uppercase.
 `output`: default `'print'`. Dictates what form the output of Apoc will be given as. Apoc currently
 only supports printing the output. Future support for .txt, .json, and .apoc formats is planned.
 
+`force_msg_case`: default `False`. Dictates whether or not Apoc will force all characters to be either all uppercase
+or all lowercase when using the `msg` encryption option. Must be used in conjunction with `force_case` to take effect.
+
 ----
 
 # Functions
@@ -58,8 +61,10 @@ _Generates and returns a key to be used for encryption in Aencode2._
 The first step in the Apocrypha encryption process. Works to determine the key that'll be used,
 and create one if necessary. Takes user input to create either a link using the secrets module as
 the user has specified, the Library of Babel's built-in random function, or given specific parameters
-of the key to be used so it can be constructed and fetched. Otherwise the file option is available which
-returns None and proceeds to the second part of encryption via the Aencode2 function.
+of the key to be used so it can be constructed and fetched. The file option is available which
+returns None and proceeds to the second part of encryption via the Aencode2 function. Otherwise the
+custom key option is available which returns the key entered by the user with a post-fixed ".msg" signifier
+to be identified by the Aencode2 function.
 
 ###`Aencode2(config: Config, key: str or None) -> None`
 
@@ -74,7 +79,7 @@ _Given a key of either a valid link or a NoneType, processes to encrypt and prin
 The second and final step in the Apocrypha encryption process. Gets the file location of the downloaded
 valid file to read and prepare to use as a key for the encryption. If the key format that gets passed
 is a link, it'll attempt to open it via the default system web browser, so it can be downloaded. It then
-moves on to get the user to input the filepath for the program to utilize.
+moves on to get the user to input the filepath or the custom key for the program to utilize.
 
 The program then prompts for the message the user wants to encrypt after validating the key.
 It then encrypts the message using the Apocrypha method: Find and compile a list of all indexes of characters matching
@@ -95,9 +100,9 @@ _Helper function which starts the decryption process and prompts the user to ret
 >Returns: `str`; File path to be processed by Adecode2
 
 The first step in the Apocrypha decryption process. Given the user input of either a full link, link parameters,
-or a file, gets the user to either open the link, constructs then opens the link, or simply input the filepath
-respectively. Finally gets the user to enter the location of the file either obtained, or previously had. Passes
-the str of the filepath to Adecode2 for processing and use for decryption.
+a file, or a custom key, gets the user to either open the link, constructs then opens the link, or simply input the
+filepath or key respectively. Finally gets the user to enter the location of the file either obtained, or previously
+had. Passes the str of the filepath or key to Adecode2 for processing and use for decryption.
 
 ###`Adecode2(config: Config, fileloc: str) -> None`
 
@@ -109,10 +114,10 @@ _Given a valid file location, prompts for an encrypted message to decrypt and pr
 > 
 >Returns: `None`; Final function using the Adecode1 helper function, prints to console.
 
-The second and final step in the Apocrypha decryption process. Takes the filepath and validates it, then opens it
-and prepares it for the decryption process. Proceeds to prompt the user for the input of the encrypted message. It then
-formats the input to be able to process each character to find and then delete from the key in the same way the
-encryption process created it.
+The second and final step in the Apocrypha decryption process. Takes the filepath or key and validates it or creates it,
+respectively, then opens it and prepares it for the decryption process. Proceeds to prompt the user for the input of the
+encrypted message. It then formats the input to be able to process each character to find and then delete from the key
+in the same way the encryption process created it.
 
 ###`config_handler(fileloc: str = '') -> Config`
 _Looks for an existing config file to read from and set up, otherwise creates a config with default values and returns
@@ -126,7 +131,7 @@ Function that is used for returning a `Config` object for the Apoc program to us
 otherwise creates a "config.json" file in the parent directory with the default values as defined above.
 
 ###`expanding_hash(invar: str, length: int = 5000) -> str`
->######CURRENTLY UNIMPLEMENTED
+
 _Iteratively increases a given string into a hash containing characters specified below in the return docstring._
 
 >Parameter `invar`: String to be expanded into a hash used for Apocrypha method encryption as the key.

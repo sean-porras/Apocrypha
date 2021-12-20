@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.2    #
+#    V.1.8.3    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -54,7 +54,7 @@ class Config:
     lower_msg: bool = True
     multi_in: bool = False
     output: str = "print"  # in ['print', '.txt', '.json', '.apoc']
-    override_msg_case: bool = False
+    force_msg_case: bool = False
 
 
 def config_handler(fileloc: str = '') -> Config:
@@ -65,24 +65,24 @@ def config_handler(fileloc: str = '') -> Config:
     :returns: Config object
     """
     cc = json.dumps({'allow_cmdln': True, 'casemod': False, 'force_case': True, 'lower_msg': True, 'multi_in': False,
-                     'output': 'print', 'override_msg_case': False},
+                     'output': 'print', 'force_msg_case': False},
                     sort_keys=True, indent=4)
     if Path('config.json').exists() or (fileloc == '' and Path('config.json').exists()):
         with open('config.json') as file:
             cc = json.load(file)
         return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
-                      cc['override_msg_case'])
+                      cc['force_msg_case'])
     elif Path(fileloc).exists() and fileloc != '' and fileloc[-11:] == "config.json":
         with open(fileloc) as file:
             cc = json.load(file)
         return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
-                      cc['override_msg_case'])
+                      cc['force_msg_case'])
     else:
         with open('config.json', 'w') as file:
             file.write(cc)
         cc = json.loads(cc)
         return Config(bool(cc['allow_cmdln']), bool(cc['casemod']), bool(cc['force_case']), bool(cc['lower_msg']),
-                      bool(cc['multi_in']), cc['output'], bool(cc['override_msg_case']))
+                      bool(cc['multi_in']), cc['output'], bool(cc['force_msg_case']))
 
 
 def expanding_hash(invar: str, length: int = 5000) -> str:  # Currently Unimplemented
@@ -235,22 +235,25 @@ def Aencode2(config: Config, key: str or None) -> None:
             fileloc = ''
     else:
         fileloc = input("eA_filepath = ")
-    if (Path(fileloc).exists() and fileloc != '') or key[-4:] == ".msg":  # FIX THIS WITH 2nd CLAUSE
+    if (Path(fileloc).exists() and fileloc != '') or key[-4:] == ".msg":
         if fileloc[-4:] in [".txt", ".msg"] or fileloc[-5:] in [".json", ".apoc"]:
             pass
         else:
             print("Error: File must be a .txt, .json, or .apoc file\nNOTE: Only .txt is supported currently.")
-            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                Aencode2(config, None)
-            else:
+            try:
+                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                    Aencode2(config, None)
+                else:
+                    os._exit(0)
+            except IndexError:
                 os._exit(0)
         print("NOTE: You can only use the following with Apocrypha files: letters, space, comma, and period")
         message = input("Message: ")
-        if config.lower_msg and config.force_case or \
-                (key[-4:] == ".msg" and config.override_msg_case and config.lower_msg and config.force_case):
+        if key[-4:] != ".msg" and config.lower_msg and config.force_case or \
+                (key[-4:] == ".msg" and config.force_msg_case and config.lower_msg and config.force_case):
             message = message.lower()
-        elif not config.lower_msg and config.force_case or \
-                (key[-4:] == ".msg" and config.override_msg_case and not config.lower_msg and config.force_case):
+        elif key[-4:] != ".msg" and not config.lower_msg and config.force_case or \
+                (key[-4:] == ".msg" and config.force_msg_case and not config.lower_msg and config.force_case):
             message = message.upper()
         messagefinal = []
         if key is not None:
@@ -266,9 +269,12 @@ def Aencode2(config: Config, key: str or None) -> None:
             file.close()
         if len(origstrfile) < len(message):
             print("Error: Key file is not large enough to encrypt for your message.")
-            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                Aencode2(config, None)
-            else:
+            try:
+                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                    Aencode2(config, None)
+                else:
+                    os._exit(0)
+            except IndexError:
                 os._exit(0)
         strfile = origstrfile.replace("\n", "")
         t0 = time.time()
@@ -308,9 +314,12 @@ def Aencode2(config: Config, key: str or None) -> None:
         os._exit(0)
     else:
         print("Error: Incorrect filepath.")
-        if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-            Aencode2(config, None)
-        else:
+        try:
+            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                Aencode2(config, None)
+            else:
+                os._exit(0)
+        except IndexError:
             os._exit(0)
 
 
@@ -346,117 +355,143 @@ def Adecode2(config: Config, fileloc: str) -> None:
     :return: None; Final function using the Adecode1 helper function, prints to console.
     """
     try:
-        if Path(fileloc).exists():
-            if fileloc[-4:] != ".txt":
-                print("Error: File must be a .txt file")
+        if fileloc[-5:] in [".apoc", ".json"] or fileloc[-4:] in [".txt", ".msg"]:
+            if fileloc[-4:] not in [".txt", ".msg", "apoc", "json"]:
+                print("Error: File must be a .txt, .apoc, or .json file\nNOTE: Only .txt files are supported as of now")
+                try:
+                    if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                        Adecode2(config, Adecode1(config))
+                    else:
+                        os._exit(0)
+                except IndexError:
+                    os._exit(0)
+            if fileloc is not None:
+                if fileloc[-4:] != ".msg" and fileloc != '':
+                    if Path(fileloc).exists():
+                        file = open(fileloc)
+                        origstrfile = file.read()
+                        file.close()
+                else:
+                    origstrfile = expanding_hash(fileloc[:-4])
+            else:
+                if Path(fileloc).exists():
+                    file = open(fileloc)
+                    origstrfile = file.read()
+                    file.close()
+            keyhash = h.sha256(origstrfile.encode('utf-8')).hexdigest()
+            encryptedmessage = input("dA_eM: ")
+            strfile = origstrfile.replace("\n", "")
+            listofencmessage = encryptedmessage.strip('][').split(', ')
+            if "'" in listofencmessage[-1] and len(listofencmessage[-1]) == 66 and "]" not in listofencmessage[-1]:
+                listofencmessage[-2] = ''.join(list(filter(lambda ch: ch not in "]", listofencmessage[-2])))
+                msgkeyhash = listofencmessage[-1]
+                msgkeyhash.replace("'", "")
+                msgkeyhash = "".join(list(filter(lambda ch: ch not in "'", msgkeyhash)))
+                encryptedmessage = str(listofencmessage[:-1])
+            else:
+                msgkeyhash = None
+            if msgkeyhash is None:
+                encryptedmessage = "".join(list(filter(lambda ch: ch not in "[',]", encryptedmessage)))
+                finalmessage = []
+                locationbuild = ""
+                while True:
+                    try:
+                        if len(encryptedmessage) == 0:
+                            locationbuild = int(locationbuild)
+                            finalmessage.append(strfile[locationbuild])
+                            strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
+                            finalkeyhash = h.sha256(strfile.encode('utf-8')).hexdigest()
+                            finalkeyhash = ''.join(list(filter(lambda ch: ch not in "'", finalkeyhash)))
+                            locationbuild = ""
+                            finalmessage = "".join(finalmessage)
+                            print("Decrypted Message:\n")
+                            print(finalmessage)
+                            print("\nKey Hash Match: Unknown, missing message hash.")
+                            print("\nCurrent Final Key Hash: " + finalkeyhash)
+                            print("Start Initial Key Hash: " + keyhash)
+                            input("\nPress enter to close the program.")
+                            os._exit(0)
+                        elif encryptedmessage[0] != ' ':
+                            locationbuild = "".join(locationbuild + encryptedmessage[0])
+                            encryptedmessage = encryptedmessage[1:]
+                        elif encryptedmessage[0] == ' ':
+                            encryptedmessage = encryptedmessage[1:]
+                            locationbuild = int(locationbuild)
+                            finalmessage.append(strfile[locationbuild])
+                            strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
+                            locationbuild = ""
+                    except:
+                        print("Error: Unable to decrypt message.\n"
+                              "Probable Cause: Incorrect/Too Small of a key file.")
+                        try:
+                            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                Adecode2(config, Adecode1(config))
+                            else:
+                                os._exit(0)
+                        except IndexError:
+                            os._exit(0)
+            elif msgkeyhash is not None:
+                encryptedmessage = "".join(list(filter(lambda ch: ch not in "[',]", encryptedmessage)))
+                finalmessage = []
+                locationbuild = ""
+                while True:
+                    try:
+                        if len(encryptedmessage) == 0:
+                            locationbuild = int(locationbuild)
+                            finalmessage.append(strfile[locationbuild])
+                            strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
+                            finalkeyhash = h.sha256(strfile.encode('utf-8')).hexdigest()
+                            finalkeyhash = ''.join(list(filter(lambda ch: ch not in "'", finalkeyhash)))
+                            locationbuild = ""
+                            finalmessage = "".join(finalmessage)
+                            print("Decrypted Message:\n")
+                            print(finalmessage)
+                            if finalkeyhash == msgkeyhash:
+                                pass
+                            elif finalkeyhash != msgkeyhash:
+                                print("\nWARNING: Key Hash Matching Fail. Message is likely incorrect.")
+                            print("\nKey Hash Match: " + str(finalkeyhash == msgkeyhash))
+                            print("\nMessage Final Key Hash: " + msgkeyhash)
+                            print("Current Final Key Hash: " + finalkeyhash)
+                            print("Start Initial Key Hash: " + keyhash)
+                            input("\nPress enter to close the program.")
+                            os._exit(0)
+                        elif encryptedmessage[0] != ' ':
+                            locationbuild = "".join(locationbuild + encryptedmessage[0])
+                            encryptedmessage = encryptedmessage[1:]
+                        elif encryptedmessage[0] == ' ':
+                            encryptedmessage = encryptedmessage[1:]
+                            locationbuild = int(locationbuild)
+                            finalmessage.append(strfile[locationbuild])
+                            strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
+                            locationbuild = ""
+                    except:
+                        print("Error: Unable to decrypt message."
+                              "Probable Cause: Incorrect/Too Small of a key file.")
+                        try:
+                            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                Adecode2(config, Adecode1(config))
+                            else:
+                                os._exit(0)
+                        except IndexError:
+                            os._exit(0)
+        else:
+            print("Error: Incorrect file type.")
+            try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     Adecode2(config, Adecode1(config))
                 else:
                     os._exit(0)
-            with open(fileloc) as file:
-                origstrfile = file.read()
-                keyhash = h.sha256(origstrfile.encode('utf-8')).hexdigest()
-                encryptedmessage = input("dA_eM: ")
-                strfile = origstrfile.replace("\n", "")
-                listofencmessage = encryptedmessage.strip('][').split(', ')
-                if "'" in listofencmessage[-1] and len(listofencmessage[-1]) == 66 and "]" not in listofencmessage[-1]:
-                    listofencmessage[-2] = ''.join(list(filter(lambda ch: ch not in "]", listofencmessage[-2])))
-                    msgkeyhash = listofencmessage[-1]
-                    msgkeyhash.replace("'", "")
-                    msgkeyhash = "".join(list(filter(lambda ch: ch not in "'", msgkeyhash)))
-                    encryptedmessage = str(listofencmessage[:-1])
-                else:
-                    msgkeyhash = None
-                if msgkeyhash is None:
-                    encryptedmessage = "".join(list(filter(lambda ch: ch not in "[',]", encryptedmessage)))
-                    finalmessage = []
-                    locationbuild = ""
-                    while True:
-                        try:
-                            if len(encryptedmessage) == 0:
-                                locationbuild = int(locationbuild)
-                                finalmessage.append(strfile[locationbuild])
-                                strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
-                                finalkeyhash = h.sha256(strfile.encode('utf-8')).hexdigest()
-                                finalkeyhash = ''.join(list(filter(lambda ch: ch not in "'", finalkeyhash)))
-                                locationbuild = ""
-                                finalmessage = "".join(finalmessage)
-                                print("Decrypted Message:\n")
-                                print(finalmessage)
-                                print("\nKey Hash Match: Unknown, missing message hash.")
-                                print("\nCurrent Final Key Hash: " + finalkeyhash)
-                                print("Start Initial Key Hash: " + keyhash)
-                                input("\nPress enter to close the program.")
-                                os._exit(0)
-                            elif encryptedmessage[0] != ' ':
-                                locationbuild = "".join(locationbuild + encryptedmessage[0])
-                                encryptedmessage = encryptedmessage[1:]
-                            elif encryptedmessage[0] == ' ':
-                                encryptedmessage = encryptedmessage[1:]
-                                locationbuild = int(locationbuild)
-                                finalmessage.append(strfile[locationbuild])
-                                strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
-                                locationbuild = ""
-                        except:
-                            print(
-                                "Error: Unable to decrypt message.\nProbable Cause: Incorrect/Too Small of a key file.")
-                            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                                Adecode2(config, Adecode1(config))
-                            else:
-                                os._exit(0)
-                elif msgkeyhash is not None:
-                    encryptedmessage = "".join(list(filter(lambda ch: ch not in "[',]", encryptedmessage)))
-                    finalmessage = []
-                    locationbuild = ""
-                    while True:
-                        try:
-                            if len(encryptedmessage) == 0:
-                                locationbuild = int(locationbuild)
-                                finalmessage.append(strfile[locationbuild])
-                                strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
-                                finalkeyhash = h.sha256(strfile.encode('utf-8')).hexdigest()
-                                finalkeyhash = ''.join(list(filter(lambda ch: ch not in "'", finalkeyhash)))
-                                locationbuild = ""
-                                finalmessage = "".join(finalmessage)
-                                print("Decrypted Message:\n")
-                                print(finalmessage)
-                                if finalkeyhash == msgkeyhash:
-                                    pass
-                                elif finalkeyhash != msgkeyhash:
-                                    print("\nWARNING: Key Hash Matching Fail. Message is likely incorrect.")
-                                print("\nKey Hash Match: " + str(finalkeyhash == msgkeyhash))
-                                print("\nMessage Final Key Hash: " + msgkeyhash)
-                                print("Current Final Key Hash: " + finalkeyhash)
-                                print("Start Initial Key Hash: " + keyhash)
-                                input("\nPress enter to close the program.")
-                                os._exit(0)
-                            elif encryptedmessage[0] != ' ':
-                                locationbuild = "".join(locationbuild + encryptedmessage[0])
-                                encryptedmessage = encryptedmessage[1:]
-                            elif encryptedmessage[0] == ' ':
-                                encryptedmessage = encryptedmessage[1:]
-                                locationbuild = int(locationbuild)
-                                finalmessage.append(strfile[locationbuild])
-                                strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
-                                locationbuild = ""
-                        except:
-                            print("Error: Unable to decrypt message."
-                                  "Probable Cause: Incorrect/Too Small of a key file.")
-                            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                                Adecode2(config, Adecode1(config))
-                            else:
-                                os._exit(0)
-        else:
-            print("Error: Incorrect filepath.")
-            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                Adecode2(config, Adecode1(config))
-            else:
+            except IndexError:
                 os._exit(0)
     except:
         print("Error: Unexpected error. Likely NoneType given for file location")
-        if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-            Adecode1(config)
-        else:
+        try:
+            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                Adecode1(config)
+            else:
+                os._exit(0)
+        except IndexError:
             os._exit(0)
 
 
@@ -467,7 +502,7 @@ def Adecode1(config: Config) -> str:
     :param config: Config obj; Config object which allows for config options to be utilized.
     :return: Str; File path to be processed by Adecode2
     """
-    keyformat = input("dA_k.format[<link{full;param};file>]: ")
+    keyformat = input("dA_k.format[<link{full;param};file;msg>]: ")
     keyformat = keyformat.lower()
     if keyformat == "linkparam":
         locreq = input("dA_param = ")
@@ -486,9 +521,12 @@ def Adecode1(config: Config) -> str:
                 return fileloc
             else:
                 print("Error: Link did not have a status code of 200.")
-                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                    Adecode1(config)
-                else:
+                try:
+                    if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                        Adecode1(config)
+                    else:
+                        os._exit(0)
+                except IndexError:
                     os._exit(0)
         else:
             baseurl = 'https://libraryofbabel.info/book.cgi?'
@@ -505,9 +543,12 @@ def Adecode1(config: Config) -> str:
                 return fileloc
             else:
                 print("Error: Link did not have a status code of 200.")
-                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                    Adecode1(config)
-                else:
+                try:
+                    if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                        Adecode1(config)
+                    else:
+                        os._exit(0)
+                except IndexError:
                     os._exit(0)
     elif keyformat == "linkfull":
         locreq = input("dA_loc = ")
@@ -524,23 +565,32 @@ def Adecode1(config: Config) -> str:
             return fileloc
         else:
             print("Error: Link did not have a status code of 200.")
-            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                Adecode1(config)
-            else:
+            try:
+                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                    Adecode1(config)
+                else:
+                    os._exit(0)
+            except IndexError:
                 os._exit(0)
     elif keyformat == "file":
         fileloc = input("dA_filepath = ")
         return fileloc
+    elif keyformat == "msg":
+        fileloc = input("dA_key = ") + ".msg"
+        return fileloc
     else:
         print("Error: Invalid Option.")
-        if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-            Adecode1(config)
-        else:
+        try:
+            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                Adecode1(config)
+            else:
+                os._exit(0)
+        except IndexError:
             os._exit(0)
 
 
 def main():
-    print("A_version: 1.8.1")
+    print("A_version: 1.8.3")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()
@@ -556,9 +606,12 @@ def main():
         os.execl(sys.executable, sys.executable, *sys.argv)
     else:
         print("Error: Invalid input.")
-        if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-            main()
-        else:
+        try:
+            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                main()
+            else:
+                os._exit(0)
+        except IndexError:
             os._exit(0)
 
 

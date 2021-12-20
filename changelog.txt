@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.7.9    #
+#    V.1.8.2    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -58,3 +58,21 @@ For the future implementation:
 - Multiple inputs and outputs being recorded to a file, perhaps set via config as a .txt, .json,
     or perhaps a custom file type (which could be saved as a binary as an option as well)
 - Add other distro functionality in AD able to be tested via the config file so the file itself doesn't have to be run.
+
+[Dec. 17, 2021] 1.8.0 --> 1.8.1
+{AD}
+ + Added 'msg' option for eA_gen.type which implements the expanded_hash function
+ ~ Refactored logic with file I/O to account for 'msg' option given no file is necessary
+ + Automatic formatting and refactoring done on syntax, line 396 to be fixed in 1.8.2
+
+[Dec. 19, 2021] 1.8.1 --> 1.8.2
+{AD}
+ + Added 'override_msg_case' config option and implementation to allow for mixed case by default for 'msg' eA_gen.type
+ ~ Modified eA_gen.type prompt to include 'msg' option
+
+[Dec. 19, 2021] 1.8.2 --> 1.8.3
+{AD}
+ + Added 'msg' option for decryption method.
+ ~ Handled IndexError possibilities with error messages if enter were pressed for Retry prompts.
+ ~ Fixed logic error in force_case handling the 'msg' option without regard to force_msg_case config option.
++~ Updated external documentation.
