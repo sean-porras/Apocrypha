@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.1    #
+#    V.1.8.2    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -54,6 +54,7 @@ class Config:
     lower_msg: bool = True
     multi_in: bool = False
     output: str = "print"  # in ['print', '.txt', '.json', '.apoc']
+    override_msg_case: bool = False
 
 
 def config_handler(fileloc: str = '') -> Config:
@@ -64,22 +65,24 @@ def config_handler(fileloc: str = '') -> Config:
     :returns: Config object
     """
     cc = json.dumps({'allow_cmdln': True, 'casemod': False, 'force_case': True, 'lower_msg': True, 'multi_in': False,
-                     'output': 'print'},
+                     'output': 'print', 'override_msg_case': False},
                     sort_keys=True, indent=4)
     if Path('config.json').exists() or (fileloc == '' and Path('config.json').exists()):
         with open('config.json') as file:
             cc = json.load(file)
-        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'])
+        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
+                      cc['override_msg_case'])
     elif Path(fileloc).exists() and fileloc != '' and fileloc[-11:] == "config.json":
         with open(fileloc) as file:
             cc = json.load(file)
-        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'])
+        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
+                      cc['override_msg_case'])
     else:
         with open('config.json', 'w') as file:
             file.write(cc)
         cc = json.loads(cc)
         return Config(bool(cc['allow_cmdln']), bool(cc['casemod']), bool(cc['force_case']), bool(cc['lower_msg']),
-                      bool(cc['multi_in']), cc['output'])
+                      bool(cc['multi_in']), cc['output'], bool(cc['override_msg_case']))
 
 
 def expanding_hash(invar: str, length: int = 5000) -> str:  # Currently Unimplemented
@@ -133,7 +136,7 @@ def Aencode1(config: Config) -> str or None:
     :param config: Config obj; Config object which allows for config options to be utilized.
     :return: str (valid link) or None (indicative of txt, json, or apoc file)
     """
-    gentype = input("eA_gen.type[<python{INT};apocrypha;custom{full;param};file>]: ")
+    gentype = input("eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: ")
     gentype = gentype.lower().strip()
     if gentype[:6] == "python":
         try:
@@ -243,9 +246,11 @@ def Aencode2(config: Config, key: str or None) -> None:
                 os._exit(0)
         print("NOTE: You can only use the following with Apocrypha files: letters, space, comma, and period")
         message = input("Message: ")
-        if config.lower_msg and config.force_case:
+        if config.lower_msg and config.force_case or \
+                (key[-4:] == ".msg" and config.override_msg_case and config.lower_msg and config.force_case):
             message = message.lower()
-        elif not config.lower_msg and config.force_case:
+        elif not config.lower_msg and config.force_case or \
+                (key[-4:] == ".msg" and config.override_msg_case and not config.lower_msg and config.force_case):
             message = message.upper()
         messagefinal = []
         if key is not None:

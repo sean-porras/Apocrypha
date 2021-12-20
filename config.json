@@ -4,5 +4,6 @@
     "force_case": true,
     "lower_msg": true,
     "multi_in": false,
-    "output": "print"
+    "output": "print",
+    "override_msg_case": false
 }
