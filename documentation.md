@@ -6,7 +6,7 @@
 
 ## Abstract
 
-![version](https://img.shields.io/badge/version-1.8.5-blue.svg)
+![version](https://img.shields.io/badge/version-1.8.6-blue.svg)
 
 This document serves to explain the processes and uses in-depth
 of each function and object.

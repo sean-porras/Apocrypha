@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.8.5    #
+#    V.1.8.6    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -86,3 +86,7 @@ For the future implementation:
 1.8.4 --> 1.8.5
 {AD}
  ~ Fixed bug with clearing the screen throwing an error as old platform check didn't work.
+
+1.8.5 --> 1.8.6
+{AD}
+ ~ Fixed bug with entering a blank string as a key for the 'msg' option.

@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.5    #
+#    V.1.8.6    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -88,7 +88,7 @@ def config_handler(fileloc: str = '') -> Config:
                       bool(cc['multi_in']), cc['output'], bool(cc['force_msg_case']))
 
 
-def expanding_hash(invar: str, length: int = 5000) -> str:  # Currently Unimplemented
+def expanding_hash(invar: str, length: int = 5000) -> str:
     """
     Iteratively increases a given string into a hash containing characters specified below in the return docstring.
     :param invar: String to be expanded into a hash used for Apocrypha method encryption as the key.
@@ -206,7 +206,7 @@ def Aencode1(config: Config) -> str or None:
         print("WARNING: If you use a non-Apocrypha text file, it will not be as secure.")
         return None
     elif gentype == "msg":
-        eAkey = input("Key Message: ") + ".msg"
+        eAkey = input("eA_key = ") + ".msg"
         return eAkey
     else:
         print("Error: Incorrect input, generating python64 location")
@@ -266,7 +266,17 @@ def Aencode2(config: Config, key: str or None) -> None:
                 origstrfile = file.read()
                 file.close()
             else:
-                origstrfile = expanding_hash(key[:-4])
+                try:
+                    origstrfile = expanding_hash(key[:-4])
+                except IndexError:
+                    try:
+                        print("Error: Invalid key. Likely blank key entered.")
+                        if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                            Aencode2(config, input("eA_key = ")+".msg")
+                        else:
+                            os._exit(0)
+                    except IndexError:
+                        os._exit(0)
         else:
             file = open(fileloc)
             origstrfile = file.read()
@@ -377,7 +387,17 @@ def Adecode2(config: Config, fileloc: str) -> None:
                         origstrfile = file.read()
                         file.close()
                 else:
-                    origstrfile = expanding_hash(fileloc[:-4])
+                    try:
+                        origstrfile = expanding_hash(fileloc[:-4])
+                    except IndexError:
+                        try:
+                            print("Error: Invalid key. Likely blank key entered.")
+                            if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                Adecode2(config, input("dA_key = ") + ".msg")
+                            else:
+                                os._exit(0)
+                        except IndexError:
+                            os._exit(0)
             else:
                 if Path(fileloc).exists():
                     file = open(fileloc)
@@ -595,7 +615,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.8.5")
+    print("A_version: 1.8.6")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()
