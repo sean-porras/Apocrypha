@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.8.4    #
+#    V.1.8.5    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -82,3 +82,7 @@ For the future implementation:
  ~ Fixed bug with key variable not being defined in 'file' encryption method
  ~ Fixed incorrect version being displayed for all documents
 +~ Updated internal documentation.
+
+1.8.4 --> 1.8.5
+{AD}
+ ~ Fixed bug with clearing the screen throwing an error as old platform check didn't work.

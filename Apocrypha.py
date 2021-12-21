@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.4    #
+#    V.1.8.5    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -595,7 +595,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.8.4")
+    print("A_version: 1.8.5")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()
@@ -607,7 +607,7 @@ def main():
     elif EncOrDec[0] == 'c':
         config_fileloc = input("cA_filepath: ")
         config_handler(config_fileloc)
-        os.system('cls' if os.system == 'nt' else 'clear')
+        _ = os.system('cls' if os.sys.platform == 'win32' else 'clear')
         os.execl(sys.executable, sys.executable, *sys.argv)
     else:
         print("Error: Invalid input.")

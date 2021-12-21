@@ -6,7 +6,7 @@
 
 ## Description
 
-![version](https://img.shields.io/badge/verison-1.8.4-blue.svg)
+![version](https://img.shields.io/badge/verison-1.8.5-blue.svg)
 ![documentation](https://img.shields.io/badge/documentation-passing-brightgreen.svg)
 
 Placeholder file. Please read the documentation.md file for an in-depth look into the program.
