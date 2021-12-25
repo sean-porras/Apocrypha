@@ -1,13 +1,7 @@
 #################
 #   APOCRYPHA   #
-#    V.1.8.6    #
+#    V.1.0.0    #
 #################
-"""
--=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
-    Apocrypha:
-        I. from ecclesiastical Latin "Apocrypha (scripta)" meaning "hidden (writings)".
-        II. the plane of Oblivion belonging to Hermaeus Mora, the Daedric Prince of Fate, Knowledge and Memory
-"""
 import os
 import re
 import sys
@@ -337,33 +331,6 @@ def Aencode2(config: Config, key: str or None) -> None:
             os._exit(0)
 
 
-'''Concept List:
-  1. Get the user to DL the .txt file of the book [X]
-  2. Have the user input the file location of the .txt file under a drive [X]
-  3. Check to see if the file location is correct, if not, close the program [X]
-  4. Create a list from the message via iter each ch and choose a random index of given ch, then remove. [X]
-  5. Create hashes of the final key to validate encryption [X]
-  6. Rework the decryption method to function again [X]
-  7. If a hash does not exist with the message, work around to decode anyways [X]
-  8. Ensure the file going to be opened is a .txt file [X]
-  9. Prevent build if file length is shorter than the message to be encrypted [X]
-  10. Clean up python gentype with any length of token [X]
-  11. Add recursion functionality to retry failed/errored out parts of the program [X]
-  12. Clean up the code base [while True: WIP]
-  13. Create different versions of this program with certain restrictions [[Trashed, Admin vs Stable]]
-    a. Public Dist: Require a hash that matches after decryption to display message [T]
-    b. Private Dist: Only show final hash of the key and given, if not matching, display hashes, not the message [T]
-    c. Admin Dist: Latest developer version, no restrictions, updated first for new features [X]
-    d. Stable Dist: Current proven version with bug testing and absent of major errors [X]
-  14. Create failsafe if ch is not found, end program, prompt for retry with a new key [X]
-  15. Create administrative documentation and changelog for posterity [WIP]
-  16. Implement a function which simply uses any key to securely use with current method [X]
-  17. Implement changing of unused characters in key for any character accepted as valid [ ]
-  18. Implement whole base program command line functionality [ ]
-  99. Create a new version which simply uses any key to securely use with no fail state. (Similar to AES) [ ]
-'''
-
-
 def Adecode2(config: Config, fileloc: str) -> None:
     """
     Given a valid file location or custom key, prompts for an encrypted message to decrypt and print the results.
@@ -617,7 +584,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.8.6")
+    print("A_version: 1.0.0")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()

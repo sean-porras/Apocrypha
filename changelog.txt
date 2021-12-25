@@ -2,6 +2,7 @@
 #   APOCRYPHA   #
 #   CHANGELOG   #
 #    V.1.8.6    #
+#    V.1.0.0    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -90,3 +91,15 @@ For the future implementation:
 1.8.5 --> 1.8.6
 {AD}
  ~ Fixed bug with entering a blank string as a key for the 'msg' option.
+
+[Dec. 25, 2021]
+{AD} 1.8.6
+ +~Added and modified items to the internal Concept List documentation
+{SD} null --> 1.0.0
+ + Added Stable Distribution, {SD}, of Apocrypha, starting at version 1.0.0 forked from 1.8.6, currently using the
+   same 'master' branch on GitHub initially. Will later separate into 'master' containing the {SD}, and an
+   'admin' branch containing the {AD}.
+ + Stable dist. currently named 'Apocrypha_stable.py' for ease of uploading as detailed above.
+{DOCS}
+ ~ Modified changelog format to account for {AD} and {SD} versions and {DOCS} separately and cleaner
+ ~ Updated some documentation such as the readme, but only slightly. Will do better I promise :)

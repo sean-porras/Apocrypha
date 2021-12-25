@@ -6,7 +6,8 @@
 
 ## Abstract
 
-![version](https://img.shields.io/badge/version-1.8.6-blue.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.8.6-blue.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.0.0-brightgreen.svg)
 
 This document serves to explain the processes and uses in-depth
 of each function and object.
@@ -14,6 +15,10 @@ of each function and object.
 The Apocrypha cipher takes a message and a key given by the user
 and proceeds to encrypt the message with the key by iteratively
 changing the key as it encrypts.
+
+NOTE: For the best reading experience and to correctly view this document as intended,
+please view in an IntelliJ IDE or other Markdown viewer which displays similarly. There
+should be no random `#`s at the beginning of lines as appears on GitHub.
 
 ----
 
