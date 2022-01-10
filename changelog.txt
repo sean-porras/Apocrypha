@@ -59,6 +59,7 @@ For the future implementation:
 - Multiple inputs and outputs being recorded to a file, perhaps set via config as a .txt, .json,
     or perhaps a custom file type (which could be saved as a binary as an option as well)
 - Add other distro functionality in AD able to be tested via the config file so the file itself doesn't have to be run.
+    Update [1.7.2022]: I've decided that the above idea will be nixed.
 
 [Dec. 17, 2021] 1.8.0 --> 1.8.1
 {AD}
@@ -103,3 +104,27 @@ For the future implementation:
 {DOCS}
  ~ Modified changelog format to account for {AD} and {SD} versions and {DOCS} separately and cleaner
  ~ Updated some documentation such as the readme, but only slightly. Will do better I promise :)
+
+[Jan. 2, 2022]
+{AD} 1.8.7
+ ~ Modified config handler to be resistent to invalid JSON files
+ ~ Modified config handler to allow JSON files that don't end in "config.json" as a valid input. Ex. "config_apoc.json"
+    is now valid and will be properly read and processed.
+{DOCS}
+ ~ Updated config handler function documentation.
+
+[Jan. 7, 2022]
+{AD} 1.8.7
+ + Added comments to un-pushed, current 1.8.7 build which would implement unused character utilization for characters
+    not found in the key to be implemented and tested in a later version for evaluation for stable branch merge.
+   !!!WARNING!!! The above commented out implementation of this feature is merely a draft, and hasn't been tested.
++#+Planned merge for current 1.8.7 {AD} build to be merged into {SD} 1.0.1 sans comments described above.
++#+Planned addition of error code document detailing not only what the error is, but also where it occurred.
+    PUSH THIS RELEASE WITH PLANNED MERGE TO {SD} 1.0.1
+
+[Jan. 10, 2022]
+{AD} 1.8.7
++~ Added and changed error messages to include error codes to be found in the errorcodes.md document for further
+    information regarding not only where the error occurred exactly but also what could cause it for the user.
+{DOCS}
+ + Created and updated the errorcodes.md document with all error codes organizing them by category.
