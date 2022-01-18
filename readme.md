@@ -8,8 +8,8 @@
 
 ## Description
 
-![version](https://img.shields.io/badge/Admin_Version-1.8.7-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.0.0-brightgreen.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.0-blue.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.0.1-brightgreen.svg)
 ![documentation](https://img.shields.io/badge/documentation-passing-brightgreen.svg)
 
 The Apocrypha cipher takes a message and a key given by the user
@@ -124,6 +124,12 @@ It finally gets the hash of the final result of the key after encryption as a un
 
 This method allows for the same key and the same message to have multiple encrypted versions while all decrypting to the
 same original message given the same initial key and message.
+
+NOTE: For characters not found in the key, as of {AD} 1.9.0, it will take a position of an unused character (a character
+in the key but not found in the message), and use its position as the base, then invert the ord and multiply by -1 as an
+indicator of it being a 'custom' character. This version of 'custom' character encryption will be changed to be more
+secure and reliable, as the current iteration doesn't always reliably work, many examples can be found in comments in
+{AD} which detail how it was made, what it was supposed to decrypt to, and what it actually decrypted to.
 
 ---
 

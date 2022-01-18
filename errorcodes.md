@@ -1,8 +1,8 @@
 # Error Codes
 
 ### Up to date with
-![version](https://img.shields.io/badge/Admin_Version-1.8.7-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.0.0-brightgreen.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.0-blue.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.0.1-brightgreen.svg)
 
 ---
 
@@ -245,3 +245,36 @@ There are 4 valid input options: `linkfull`, `linkparam`, `file`, or `msg`.
 A likely cause for a seemingly correct input throwing this error could be an accidental space being the first character
 for the input. It's recommended to just hit backspace and restart you're input if you think you may have accidentally
 done something like this.
+
+### III.9A
+>"Error [III.9A]: Could not resolve character not found in key"
+
+Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
+Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+
+[III.9A] indicates that a key hash was NOT found with the encrypted message, and it was NOT the last character to be
+decrypted.
+
+### III.9B
+>"Error [III.9B]: Could not resolve character not found in key"
+
+Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
+Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+
+[III.9B] indicates that a key hash was NOT found with the encrypted message, and it was the last character to be decrypted
+
+### III.9C
+>"Error [III.9C]: Could not resolve character not found in key"
+
+Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
+Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+
+[III.9C] indicates that a key hash was found with the encrypted message, and it was NOT the last character to be decrypted
+
+### III.9D
+>"Error [III.9D]: Could not resolve character not found in key"
+
+Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
+Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+
+[III.9D] indicates that a key hash was found with the encrypted message, and it was the last character to be decrypted

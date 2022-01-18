@@ -1,8 +1,8 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.8.6    #
-#    V.1.0.0    #
+#    V.1.9.0    #
+#    V.1.0.1    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -128,3 +128,25 @@ For the future implementation:
     information regarding not only where the error occurred exactly but also what could cause it for the user.
 {DOCS}
  + Created and updated the errorcodes.md document with all error codes organizing them by category.
+
+[Jan. 12, 2022]
+{AD} 1.8.7 --> 1.9.0
+ + Added the ability to encode characters that aren't found in the key, somewhat finicky, but works for many characters.
+ ~+Planned change of how missing characters are encrypted using a lot more secure and accurate method.
+
+[Jan. 18, 2022]
+{AD} 1.9.0
+-~ Reduced an if-elif statement for non-matching final key hashes to just an if.
+~@-Planned guaranteed removal of the "You can only use ... characters" warning with encryption with the next iteration
+    of a more secure and reliable method of encryption for these missing characters.
+{SD} 1.0.0 --> 1.0.1
+ + Merged {AD} V.1.8.7 with Stable Distribution
+{DOCS}
+ ~ Updated documentation regarding the current state of missing character encryption.
+{PLANS}
+ * {AD} 2.0.0 soft requirements:
+    - Ability to encrypt almost any character reliably and securely
+    - One-line command line functionality
+    - Full config implementation (every config option has been implemented and has a function)
+    - Standardization of changelog entry prefixes and retroactive updating according to those standards
+    - Ideally: Modifiable persistent config path
