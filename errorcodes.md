@@ -1,8 +1,11 @@
 # Error Codes
 
 ### Up to date with
-![version](https://img.shields.io/badge/Admin_Version-1.9.0-blue.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.1-blue.svg)
 ![stableversion](https://img.shields.io/badge/Stable_Version-1.0.1-brightgreen.svg)
+
+Error codes are up-to-date with the latest Admin Distribution, errors found in the Stable Distribution are consistent
+but may not include all errors listed, as some errors are caused by features not currently in the Stable Distribution.
 
 ---
 
@@ -11,12 +14,20 @@
 ### I.M1
 >"Error [I.M1]: Invalid input."
 
-Originates in the `main` function when the first character of whatever entered is either non-existant (just hitting enter,
-for example) or is not included in the following list: `e`, `d`, `c`.
+Originates in the `main` function when the first character of whatever entered is not included in the following list:
+`e`, `d`, `c`.
 
 A likely cause for a seemingly correct input throwing this error could be an accidental space being the first character
 for the input. It's recommended to just hit backspace and restart you're input if you think you may have accidentally
 done something like this.
+
+### I.M2
+>"Error [I.M2]: Invalid input."
+
+Originates in the `main` function when the first character of whatever entered is not included in the following list:
+`e`, `d`, `c`.
+
+[I.M2] specifically indicates that the user simply just hit enter, having entered nothing as an input except that.
 
 ### I.C1
 >"Error [I.C1]: Invalid config file, you can retry and specify a different JSON file."
@@ -153,6 +164,12 @@ Originates in the `Adecode2` function when the key fails to be hashed and develo
 
 This is likely due to the key entered being blank or there is a character that cannot be hashed by blake2b.
 
+### III.F2
+>"Error [III.F2]: NoneType passed for fileloc."
+
+Originates in the `Adecode2` function when `None` is given for the variable `fileloc` which dictates the file path of
+the decryption key.
+
 ### III.D1
 >"Error [III.D1]: Unable to decrypt message. Probable Cause: Incorrect/Too Small of a key file."
 
@@ -250,7 +267,7 @@ done something like this.
 >"Error [III.9A]: Could not resolve character not found in key"
 
 Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
-Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+This signifies that a character failed to decrypt with the current method of characters not found in the key.
 
 [III.9A] indicates that a key hash was NOT found with the encrypted message, and it was NOT the last character to be
 decrypted.
@@ -259,7 +276,7 @@ decrypted.
 >"Error [III.9B]: Could not resolve character not found in key"
 
 Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
-Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+This signifies that a character failed to decrypt with the current method of characters not found in the key.
 
 [III.9B] indicates that a key hash was NOT found with the encrypted message, and it was the last character to be decrypted
 
@@ -267,7 +284,7 @@ Due to the nature of this error, this error and what it signifies is specific to
 >"Error [III.9C]: Could not resolve character not found in key"
 
 Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
-Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+This signifies that a character failed to decrypt with the current method of characters not found in the key.
 
 [III.9C] indicates that a key hash was found with the encrypted message, and it was NOT the last character to be decrypted
 
@@ -275,6 +292,6 @@ Due to the nature of this error, this error and what it signifies is specific to
 >"Error [III.9D]: Could not resolve character not found in key"
 
 Originates in the `Adecode2` function when a character encrypted that wasn't found in the key cannot be decrypted.
-Due to the nature of this error, this error and what it signifies is specific to {AD} 1.9.0.
+This signifies that a character failed to decrypt with the current method of characters not found in the key.
 
 [III.9D] indicates that a key hash was found with the encrypted message, and it was the last character to be decrypted

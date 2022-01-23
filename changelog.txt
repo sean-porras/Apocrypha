@@ -150,3 +150,19 @@ For the future implementation:
     - Full config implementation (every config option has been implemented and has a function)
     - Standardization of changelog entry prefixes and retroactive updating according to those standards
     - Ideally: Modifiable persistent config path
+
+[Jan. 19-22, 2022]
+{AD} 1.9.0 --> 1.9.1
+ ~+Changed and improved the method for encrypting characters not found in the key.
+ ~ Modified old warning on acceptable characters to warn to not use $ or ^ in encryption.
+    On a standard US-en keyboard layout, only these characters are known to cause issues.
+ ^ Fixed unhandled error of being able to hit enter upon being prompted for "A_func"
+{DOCS}
+ ~ Updated documentation to be consistent with {AD} 1.9.1, including an added notice in errorcodes.md
+ ?~Possible update to changelog.txt to turn into a .md file instead.
+{PLANS}
+-->Next {SD} update will most likely be an {AD} 1.9.## future release. {AD} 1.9.1 is a release candidate for {SD} 1.1.0
+    for which the first 4 versions of {SD} may be lovingly referred to as Versions 4, 5, 6, and 7, as read in binary.
+-->For Version 6 ({SD} 1.1.0) to be merged with {AD} 1.9.1 on master, more rigorous testing is required.
+{branch: master}:{AD} 1.8.6; {SD} 1.0.0
+             --> {AD} 1.9.1; {SD} 1.0.1
