@@ -1,8 +1,8 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.8.6    #
-#    V.1.0.0    #
+#    V.1.9.1    #
+#    V.1.0.1    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution
@@ -59,6 +59,7 @@ For the future implementation:
 - Multiple inputs and outputs being recorded to a file, perhaps set via config as a .txt, .json,
     or perhaps a custom file type (which could be saved as a binary as an option as well)
 - Add other distro functionality in AD able to be tested via the config file so the file itself doesn't have to be run.
+    Update [1.7.2022]: I've decided that the above idea will be nixed.
 
 [Dec. 17, 2021] 1.8.0 --> 1.8.1
 {AD}
@@ -103,3 +104,65 @@ For the future implementation:
 {DOCS}
  ~ Modified changelog format to account for {AD} and {SD} versions and {DOCS} separately and cleaner
  ~ Updated some documentation such as the readme, but only slightly. Will do better I promise :)
+
+[Jan. 2, 2022]
+{AD} 1.8.7
+ ~ Modified config handler to be resistent to invalid JSON files
+ ~ Modified config handler to allow JSON files that don't end in "config.json" as a valid input. Ex. "config_apoc.json"
+    is now valid and will be properly read and processed.
+{DOCS}
+ ~ Updated config handler function documentation.
+
+[Jan. 7, 2022]
+{AD} 1.8.7
+ + Added comments to un-pushed, current 1.8.7 build which would implement unused character utilization for characters
+    not found in the key to be implemented and tested in a later version for evaluation for stable branch merge.
+   !!!WARNING!!! The above commented out implementation of this feature is merely a draft, and hasn't been tested.
++#+Planned merge for current 1.8.7 {AD} build to be merged into {SD} 1.0.1 sans comments described above.
++#+Planned addition of error code document detailing not only what the error is, but also where it occurred.
+    PUSH THIS RELEASE WITH PLANNED MERGE TO {SD} 1.0.1
+
+[Jan. 10, 2022]
+{AD} 1.8.7
++~ Added and changed error messages to include error codes to be found in the errorcodes.md document for further
+    information regarding not only where the error occurred exactly but also what could cause it for the user.
+{DOCS}
+ + Created and updated the errorcodes.md document with all error codes organizing them by category.
+
+[Jan. 12, 2022]
+{AD} 1.8.7 --> 1.9.0
+ + Added the ability to encode characters that aren't found in the key, somewhat finicky, but works for many characters.
+ ~+Planned change of how missing characters are encrypted using a lot more secure and accurate method.
+
+[Jan. 18, 2022]
+{AD} 1.9.0
+-~ Reduced an if-elif statement for non-matching final key hashes to just an if.
+~@-Planned guaranteed removal of the "You can only use ... characters" warning with encryption with the next iteration
+    of a more secure and reliable method of encryption for these missing characters.
+{SD} 1.0.0 --> 1.0.1
+ + Merged {AD} V.1.8.7 with Stable Distribution
+{DOCS}
+ ~ Updated documentation regarding the current state of missing character encryption.
+{PLANS}
+ * {AD} 2.0.0 soft requirements:
+    - Ability to encrypt almost any character reliably and securely
+    - One-line command line functionality
+    - Full config implementation (every config option has been implemented and has a function)
+    - Standardization of changelog entry prefixes and retroactive updating according to those standards
+    - Ideally: Modifiable persistent config path
+
+[Jan. 19-22, 2022]
+{AD} 1.9.0 --> 1.9.1
+ ~+Changed and improved the method for encrypting characters not found in the key.
+ ~ Modified old warning on acceptable characters to warn to not use $ or ^ in encryption.
+    On a standard US-en keyboard layout, only these characters are known to cause issues.
+ ^ Fixed unhandled error of being able to hit enter upon being prompted for "A_func"
+{DOCS}
+ ~ Updated documentation to be consistent with {AD} 1.9.1, including an added notice in errorcodes.md
+ ?~Possible update to changelog.txt to turn into a .md file instead.
+{PLANS}
+-->Next {SD} update will most likely be an {AD} 1.9.## future release. {AD} 1.9.1 is a release candidate for {SD} 1.1.0
+    for which the first 4 versions of {SD} may be lovingly referred to as Versions 4, 5, 6, and 7, as read in binary.
+-->For Version 6 ({SD} 1.1.0) to be merged with {AD} 1.9.1 on master, more rigorous testing is required.
+{branch: master}:{AD} 1.8.6; {SD} 1.0.0
+             --> {AD} 1.9.1; {SD} 1.0.1

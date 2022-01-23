@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.0.0    #
+#    V.1.0.1    #
 #################
 import os
 import re
@@ -67,13 +67,35 @@ def config_handler(fileloc: str = '') -> Config:
     if Path('config.json').exists() or (fileloc == '' and Path('config.json').exists()):
         with open('config.json') as file:
             cc = json.load(file)
-        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
-                      cc['force_msg_case'])
-    elif Path(fileloc).exists() and fileloc != '' and fileloc[-11:] == "config.json":
+        try:
+            return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'],
+                          cc['output'], cc['force_msg_case'])
+        except KeyError:
+            print("Error [I.C1]: Invalid config file, you can retry and specify a different JSON file.")
+            try:
+                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                    config_fileloc = input("cA_filepath: ")
+                    return config_handler(config_fileloc)
+                else:
+                    os._exit(0)
+            except IndexError:
+                os._exit(0)
+    elif Path(fileloc).exists() and fileloc != '' and fileloc[-5:] == ".json":
         with open(fileloc) as file:
             cc = json.load(file)
-        return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'], cc['output'],
-                      cc['force_msg_case'])
+        try:
+            return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'],
+                          cc['output'], cc['force_msg_case'])
+        except KeyError:
+            print("Error [I.C2]: Invalid config file, you can retry and specify a different file location.")
+            try:
+                if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                    config_fileloc = input("cA_filepath: ")
+                    return config_handler(config_fileloc)
+                else:
+                    os._exit(0)
+            except IndexError:
+                os._exit(0)
     else:
         with open('config.json', 'w') as file:
             file.write(cc)
@@ -140,7 +162,7 @@ def Aencode1(config: Config) -> str or None:
             pynum = int(gentype[6:].strip())
             eAhex = s.token_hex(pynum // 2)
         except:
-            print("Error: Invalid Input, using python64 generation method")
+            print("Error [II.N1]: Invalid Input, using python64 generation method")
             eAhex = s.token_hex(32)
         eAloc = eAhex + "-w" + str(random.randint(1, 4)) + "-s" + str(random.randint(1, 5)) + "-v" + str(
             random.randint(1, 32)) + ":" + str(random.randint(1, 410))
@@ -159,7 +181,7 @@ def Aencode1(config: Config) -> str or None:
             print("Success")
             return keyreq
         else:
-            print("Error: Link did not have a status code of 200, using python64 generation method")
+            print("Error [II.L1]: Link did not have a status code of 200, using python64 generation method")
             eAhex = s.token_hex(32)
             eAloc = eAhex + "-w" + str(random.randint(1, 4)) + "-s" + str(random.randint(1, 5)) + "-v" + str(
                 random.randint(1, 32)) + ":" + str(random.randint(1, 410))
@@ -175,7 +197,7 @@ def Aencode1(config: Config) -> str or None:
                 print("Success")
                 return keyrequrl
             else:
-                print("Error: Link did not have a status code of 200, using python64 generation method")
+                print("Error [II.L2]: Link did not have a status code of 200, using python64 generation method")
                 eAhex = s.token_hex(32)
                 eAloc = eAhex + "-w" + str(random.randint(1, 4)) + "-s" + str(random.randint(1, 5)) + "-v" + str(
                     random.randint(1, 32)) + ":" + str(random.randint(1, 410))
@@ -189,7 +211,7 @@ def Aencode1(config: Config) -> str or None:
                 print("Success")
                 return keyrequrl
             else:
-                print("Error: Link did not have a status code of 200, using python64 generation method")
+                print("Error [II.L3]: Link did not have a status code of 200, using python64 generation method")
                 eAhex = s.token_hex(32)
                 eAloc = eAhex + "-w" + str(random.randint(1, 4)) + "-s" + str(random.randint(1, 5)) + "-v" + str(
                     random.randint(1, 32)) + ":" + str(random.randint(1, 410))
@@ -203,7 +225,7 @@ def Aencode1(config: Config) -> str or None:
         eAkey = input("eA_key = ") + ".msg"
         return eAkey
     else:
-        print("Error: Incorrect input, generating python64 location")
+        print("Error [II.N2]: Invalid input, generating python64 location")
         eAhex = s.token_hex(32)
         eAloc = eAhex + "-w" + str(random.randint(1, 4)) + "-s" + str(random.randint(1, 5)) + "-v" + str(
             random.randint(1, 32)) + ":" + str(random.randint(1, 410))
@@ -223,7 +245,7 @@ def Aencode2(config: Config, key: str or None) -> None:
         try:
             webbrowser.open(key)
         except:
-            print("Error in opening the key link in a web browser, please open manually. Link: " + key)
+            print("Error [II.W1]: unable to open the key link in a web browser, please open manually. Link: " + key)
         fileloc = input("eA_filepath = ")
     elif key is not None:
         if key[-4:] in [".txt", ".msg"] or key[-5:] in [".json", ".apoc"]:
@@ -237,7 +259,7 @@ def Aencode2(config: Config, key: str or None) -> None:
         if fileloc[-4:] in [".txt", ".msg"] or fileloc[-5:] in [".json", ".apoc"]:
             pass
         else:
-            print("Error: File must be a .txt, .json, or .apoc file\nNOTE: Only .txt is supported currently.")
+            print("Error [II.F1]: File must be a .txt, .json, or .apoc file\nNOTE: Only .txt is supported currently.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     Aencode2(config, None)
@@ -264,7 +286,7 @@ def Aencode2(config: Config, key: str or None) -> None:
                     origstrfile = expanding_hash(key[:-4])
                 except IndexError:
                     try:
-                        print("Error: Invalid key. Likely blank key entered.")
+                        print("Error [II.K1]: Invalid key. Likely blank key entered.")
                         if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                             Aencode2(config, input("eA_key = ")+".msg")
                         else:
@@ -276,7 +298,7 @@ def Aencode2(config: Config, key: str or None) -> None:
             origstrfile = file.read()
             file.close()
         if len(origstrfile) < len(message):
-            print("Error: Key file is not large enough to encrypt for your message.")
+            print("Error [II.E1]: Key file is not large enough to encrypt for your message.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     Aencode2(config, None)
@@ -298,18 +320,28 @@ def Aencode2(config: Config, key: str or None) -> None:
                             charused = random.choice([m.start() for m in re.finditer(ch.upper(), strfile)])
                             print("Warning: Character case has been modified.")
                         else:
-                            print("Error: Couldn't encrypt message. Character not found in key in upper or lower.")
-                            input("Press enter to continue and retry with a new key.")
-                            Aencode2(config, None)
+                            print("Error [II.E2]: Couldn't encrypt message."
+                                  "Character not found in key in upper or lower.")
+                            try:
+                                if input("Retry with a new key (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                    Aencode2(config, None)
+                                else:
+                                    os._exit(0)
+                            except IndexError:
+                                os._exit(0)
                     else:
                         charused = random.choice(chars)
-                    # charused = random.choice([m.start() for m in re.finditer(ch, strfile)])  # Replace w/above
                 else:
-                    charused = random.choice([m.start() for m in re.finditer("\.", strfile)])  # Replace w/chars in
+                    charused = random.choice([m.start() for m in re.finditer("\.", strfile)])
             except:
-                print("Error: Couldn't encrypt message. Character not found in key.")
-                input("Press enter to continue and retry with a new key.")
-                Aencode2(config, None)
+                print("Error [II.E3]: Couldn't encrypt message. Character not found in key.")
+                try:
+                    if input("Retry with a new key (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                        Aencode2(config, None)
+                    else:
+                        os._exit(0)
+                except IndexError:
+                    os._exit(0)
             messagefinal.append(charused)
             strfile = strfile[:charused] + strfile[charused + 1:]
         keyhash = h.sha256(strfile.encode('utf-8')).hexdigest()
@@ -321,7 +353,7 @@ def Aencode2(config: Config, key: str or None) -> None:
         input("\nPress enter when done: ")
         os._exit(0)
     else:
-        print("Error: Incorrect filepath.")
+        print("Error [II.P1]: Incorrect filepath.")
         try:
             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                 Aencode2(config, None)
@@ -341,7 +373,8 @@ def Adecode2(config: Config, fileloc: str) -> None:
     try:
         if fileloc[-5:] in [".apoc", ".json"] or fileloc[-4:] in [".txt", ".msg"]:
             if fileloc[-4:] not in [".txt", ".msg", "apoc", "json"]:
-                print("Error: File must be a .txt, .apoc, or .json file\nNOTE: Only .txt files are supported as of now")
+                print("Error [III.F1]: File must be a .txt, .apoc, or .json file"
+                      "NOTE: Only .txt files are supported as of now")
                 try:
                     if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                         Adecode2(config, Adecode1(config))
@@ -360,7 +393,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                         origstrfile = expanding_hash(fileloc[:-4])
                     except IndexError:
                         try:
-                            print("Error: Invalid key. Likely blank key entered.")
+                            print("Error [III.K1]: Invalid key. Likely blank key entered.")
                             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                                 Adecode2(config, input("dA_key = ") + ".msg")
                             else:
@@ -415,7 +448,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                             strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
                             locationbuild = ""
                     except:
-                        print("Error: Unable to decrypt message.\n"
+                        print("Error [III.D1]: Unable to decrypt message.\n"
                               "Probable Cause: Incorrect/Too Small of a key file.")
                         try:
                             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
@@ -440,9 +473,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                             finalmessage = "".join(finalmessage)
                             print("Decrypted Message:\n")
                             print(finalmessage)
-                            if finalkeyhash == msgkeyhash:
-                                pass
-                            elif finalkeyhash != msgkeyhash:
+                            if finalkeyhash != msgkeyhash:
                                 print("\nWARNING: Key Hash Matching Fail. Message is likely incorrect.")
                             print("\nKey Hash Match: " + str(finalkeyhash == msgkeyhash))
                             print("\nMessage Final Key Hash: " + msgkeyhash)
@@ -460,7 +491,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                             strfile = strfile[:locationbuild] + strfile[locationbuild + 1:]
                             locationbuild = ""
                     except:
-                        print("Error: Unable to decrypt message."
+                        print("Error [III.D2]: Unable to decrypt message."
                               "Probable Cause: Incorrect/Too Small of a key file.")
                         try:
                             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
@@ -470,7 +501,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                         except IndexError:
                             os._exit(0)
         else:
-            print("Error: Incorrect file type.")
+            print("Error [III.F2]: Incorrect file type.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     Adecode2(config, Adecode1(config))
@@ -479,7 +510,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
             except IndexError:
                 os._exit(0)
     except:
-        print("Error: Unexpected error. Likely NoneType given for file location")
+        print("Error [III.U1]: Unexpected error. Likely NoneType given for file location")
         try:
             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                 Adecode1(config)
@@ -510,11 +541,11 @@ def Adecode1(config: Config) -> str:
                 try:
                     webbrowser.open(baseurl + locreq)
                 except:
-                    print("Error: Failed to open key link, please open manually. Link: " + baseurl + locreq)
+                    print("Error [III.W1]: Failed to open key link, please open manually. Link: " + baseurl + locreq)
                 fileloc = input("dA_filepath = ")
                 return fileloc
             else:
-                print("Error: Link did not have a status code of 200.")
+                print("Error [III.L1]: Link did not have a status code of 200.")
                 try:
                     if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                         Adecode1(config)
@@ -532,11 +563,11 @@ def Adecode1(config: Config) -> str:
                 try:
                     webbrowser.open(baseurl + locreq)
                 except:
-                    print("Error: Failed to open key link, please open manually. Link: " + baseurl + locreq)
+                    print("Error [III.W2]: Failed to open key link, please open manually. Link: " + baseurl + locreq)
                 fileloc = input("dA_filepath = ")
                 return fileloc
             else:
-                print("Error: Link did not have a status code of 200.")
+                print("Error [III.L2]: Link did not have a status code of 200.")
                 try:
                     if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                         Adecode1(config)
@@ -554,11 +585,11 @@ def Adecode1(config: Config) -> str:
             try:
                 webbrowser.open(locreq)
             except:
-                print("Error: Failed to open key link, please open manually. Link: " + locreq)
+                print("Error [III.W3]: Failed to open key link, please open manually. Link: " + locreq)
             fileloc = input("dA_filepath = ")
             return fileloc
         else:
-            print("Error: Link did not have a status code of 200.")
+            print("Error [III.L3]: Link did not have a status code of 200.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     Adecode1(config)
@@ -573,7 +604,7 @@ def Adecode1(config: Config) -> str:
         fileloc = input("dA_key = ") + ".msg"
         return fileloc
     else:
-        print("Error: Invalid Option.")
+        print("Error [III.N1]: Invalid Option.")
         try:
             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                 Adecode1(config)
@@ -584,7 +615,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.0.0")
+    print("A_version: 1.0.1")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     if EncOrDec[0] == 'e':
         config = config_handler()
@@ -599,7 +630,7 @@ def main():
         _ = os.system('cls' if os.sys.platform == 'win32' else 'clear')
         os.execl(sys.executable, sys.executable, *sys.argv)
     else:
-        print("Error: Invalid input.")
+        print("Error [I.M1]: Invalid input.")
         try:
             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                 main()
