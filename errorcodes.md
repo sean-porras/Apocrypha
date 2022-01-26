@@ -1,8 +1,8 @@
 # Error Codes
 
 ### Up to date with
-![version](https://img.shields.io/badge/Admin_Version-1.9.1-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.0.1-brightgreen.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.2-blue.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
 
 Error codes are up-to-date with the latest Admin Distribution, errors found in the Stable Distribution are consistent
 but may not include all errors listed, as some errors are caused by features not currently in the Stable Distribution.
@@ -125,7 +125,7 @@ The absence of this error doesn't guarantee your key as being long enough to enc
 on the content of that file. You can't encrypt the message "hello" with a txt file that only includes "check".
 
 ### II.E2
->"Error [II.E2]: Couldn't encrypt message. Character not found in key in upper or lower."
+>"Error [II.E2]: Couldn't encrypt message. Exception thrown encrypting character not found in key."
 
 Originates in the `Aencode2` function when the program fails to encrypt a character that has a lower- or uppercase
 counterpart. Casemod can be used to prevent this. A feature is planned to make this error a lot less common.
@@ -139,6 +139,12 @@ Originates in the `Aencode2` function when the program fails to encrypt a charac
 uppercase counterpart. A feature is planned to make this error a lot less common.
 
 This denotes that the character attempting to be encrypted was not found in the key.
+
+### II.E4
+>"Error [II.E4]: Couldn't encrypt message. Couldn't encrypt '.', '$', or '^' character."
+
+Originates in the `Aencode2` function when the program fails to encrypt a period, dollar sign, or carrot character.
+These characters have special implementations to bypass weird behaviors caused by the use of regex.
 
 ### II.P1
 >"Error [II.P1]: Incorrect filepath."
