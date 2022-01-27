@@ -8,17 +8,17 @@
 
 ## Description
 
-![version](https://img.shields.io/badge/Admin_Version-1.9.1-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.0.1-brightgreen.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.2-blue.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
 ![documentation](https://img.shields.io/badge/documentation-passing-brightgreen.svg)
 
 The Apocrypha cipher takes a message and a key given by the user
 and proceeds to encrypt the message with the key by iteratively
 changing the key as it encrypts.
 
-NOTE: For the best reading experience and to correctly view this document as intended,
-please view in an IntelliJ IDE or other Markdown viewer which displays similarly. There
-should be no random `#`s at the beginning of lines as appears on GitHub.
+>NOTE: For the best reading experience and to correctly view this document as intended,
+>please view in an IntelliJ IDE or other Markdown viewer which displays similarly. There
+>should be no random `#`s at the beginning of lines as appears on GitHub.
 
 ----
 ----
@@ -44,25 +44,7 @@ These dictate the functions of the Apocrypha program.
 ---
 ---
 
->######CURRENTLY UNIMPLEMENTED: `allow_cmdln`: default `True`. Dictates whether or not command line can be used given all arguments rather than needing to go through the program step by step.
-
----
-
-`casemod`: default `False`. Dictates whether or not Apoc will be able to change the case of the letter it's trying to 
-encrypt if the letter in its current case isn't able to be found.
-
----
-
-`force_case`: default `True`. Dictates whether or not Apoc will force all characters to be either all uppercase or all 
-lowercase as determined by `lower_msg`, otherwise keeps original case and allows for mixed case messages. If you're 
-planning on using a custom key using expanded hashing or custom .txt file, it's recommend to set this as `False` as 
-those methods allows for mixed case.
-
----
-
-`lower_msg`: default `True`. Dictates whether or not Apoc will force all characters to be either all uppercase or all 
-lowercase if `force_case` is `True`. Given :`force_case`: is `True`, and if `lower_msg` is `True`, the message will be
-forced to all lowercase, otherwise forces to uppercase.
+>######TO BE IMPLEMENTED: `allow_cmdln`: default `True`. Dictates whether or not command line can be used given all arguments rather than needing to go through the program step by step.
 
 ---
 
@@ -72,11 +54,6 @@ forced to all lowercase, otherwise forces to uppercase.
 
 `output`: default `'print'`. Dictates what form the output of Apoc will be given as. Apoc currently
 only supports printing the output. Future support for .txt, .json, and .apoc formats is planned.
-
----
-
-`force_msg_case`: default `False`. Dictates whether or not Apoc will force all characters to be either all uppercase
-or all lowercase when using the `msg` encryption option. Must be used in conjunction with `force_case` to take effect.
 
 ----
 ----
@@ -176,6 +153,19 @@ the resulting configuration from the file._
 
 Function that is used for returning a `Config` object for the Apoc program to use if a "config.json" file exists,
 otherwise creates a "config.json" file in the parent directory with the default values as defined above.
+
+---
+
+####`config_subsys(cf: dict) -> dict`
+_The subsystem in charge of taking in and modifying a dictionary according to user input. Constantly runs in the
+subsystem until the user enters the command to quit/exit._
+
+>Parameter `cf`: `dict`; Dictionary; This dictionary with config options is modified and returned
+> 
+>Returns: `dict`; Modified cf dictionary post-user processing.
+
+The function that puts the user into a system where they can modify the options of the config file as they please.
+Called only by the `config_handler` function via entering `c` into the `A_func` prompt in `main`.
 
 ---
 

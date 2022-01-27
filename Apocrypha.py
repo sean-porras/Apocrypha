@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.9.1    #
+#    V.1.9.2    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -34,53 +34,96 @@ class Config:
 
     allow_cmdln: default True. Dictates whether or not command line can be used given all arguments
         rather than needing to go through the program step by step. ### CURRENTLY UNIMPLEMENTED ###
-    casemod: default False. Dictates whether or not Apoc will be able to change the case of the letter
-        it's trying to encrypt if the letter in its current case isn't able to be found.
-    force_case: default True. Dictates whether or not Apoc will force all characters to be either
-        all uppercase or all lowercase as determined by :lower_msg:, otherwise keeps original case
-        and allows for mixed case messages. If you're planning on using a custom key using expanded
-        hashing or custom .txt file, it's recommend to set this as False as those methods allows for mixed case.
-    lower_msg: default True. Dictates whether or not Apoc will force all characters to be either
-        all uppercase or all lowercase if :force_case: is True. Given :force_case: is True, and if lower_msg
-        is True, the message will be forced to all lowercase, otherwise forces to uppercase.
     multi_in: default False. Dictates whether or not multiple runs of Apoc will be run on a single file
         containing commands for each separate result. ### CURRENTLY UNIMPLEMENTED ###
     output: default 'print'. Dictates what form the output of Apoc will be given as. Currently
         only supports printing the output. Future support for .txt, .json, and .apoc formats.
-    force_msg_case: default False. Dictates whether or not Apoc will force all characters to be either all
-        uppercase or all lowercase when using the `msg` encryption option. Must be used in conjunction with
-        `force_case` to take effect.
     """
     allow_cmdln: bool = True
-    casemod: bool = False
-    force_case: bool = True
-    lower_msg: bool = True
     multi_in: bool = False
     output: str = "print"  # in ['print', '.txt', '.json', '.apoc']
-    force_msg_case: bool = False  # Future To Do: REMOVE CASEMOD, REPLACE WITH UNFOUND CH ENCRYPTION
 
 
-def config_handler(fileloc: str = '') -> Config:
+def config_subsys(cf: dict) -> dict:
+    """
+    The subsystem in charge of taking in and modifying a dictionary according to user
+    input. Constantly runs in the subsystem until the user enters the command to quit/exit.
+    :param cf: Dictionary; This dictionary with config options is modified and returned
+    :return: Dictionary; Modified cf dictionary post-user processing.
+    """
+    stay = True
+    default = {'allow_cmdln': True, 'multi_in': False, 'output': 'print'}
+    print("Config Handler Subsystem. Type 'help' for commands.")
+    while stay:
+        inp = input("> ").lower()
+        if inp == "help":
+            print("The Config Handler Subsystem allows you to modify and save config settings within\n"
+                  "the program itself to then return and use upon an automatic restart of the program.\n")
+            print("Commands:\n"
+                  "help: prints out this list\n"
+                  "default: Returns all values to their defaults\n"
+                  "allow_cmdln: Allows you to edit the 'allow_cmdln' config option\n"
+                  "multi_in: Allows you to edit the 'multi_in' config option\n"
+                  "output: Allows you to edit the 'output' config option\n"
+                  "exit/quit: Exits the Config Handler Subsystem\n")
+        elif inp in ["exit", "quit"]:
+            stay = False
+        elif inp == "default":
+            cf = default
+            stay = False
+        elif inp == "allow_cmdln":
+            print("allow_cmdln is currently: "+str(cf['allow_cmdln']))
+            print("Valid options: True, False")
+            opt = input(">>> ")
+            if opt in ["True", "False"]:
+                cf['allow_cmdln'] = bool(opt)
+            else:
+                print("Invalid Input.")
+        elif inp == "multi_in":
+            print("multi_in is currently: "+str(cf['multi_in']))
+            print("Valid options: True, False")
+            opt = input(">>> ")
+            if opt in ["True", "False"]:
+                cf['multi_in'] = bool(opt)
+            else:
+                print("Invalid Input.")
+        elif inp == "output":
+            print("output is currently: "+cf['output'])
+            print("Valid options: print, .txt, .json, .apoc")
+            opt = input(">>> ")
+            if opt in ["print", ".txt", ".json", ".apoc"]:
+                cf['output'] = opt
+            else:
+                print("Invalid Input.")
+    return cf
+
+
+def config_handler(fileloc: str = '', cfSUBSYS: bool = None) -> Config:
     """
     Looks for an existing config file to read from and set up, otherwise creates a config
     with default values and returns the resulting configuration from the file.
     :param fileloc: Str; Valid Path of file named "config.json"
+    :param cfSUBSYS: bool; None by default, if not None, allows the user to change config options
     :returns: Config object
     """
-    cc = json.dumps({'allow_cmdln': True, 'casemod': False, 'force_case': True, 'lower_msg': True, 'multi_in': False,
-                     'output': 'print', 'force_msg_case': False},
-                    sort_keys=True, indent=4)
+    cd = {'allow_cmdln': True, 'multi_in': False, 'output': 'print'}
+    cc = json.dumps(cd, sort_keys=True, indent=4)
     if Path('config.json').exists() or (fileloc == '' and Path('config.json').exists()):
         with open('config.json') as file:
             cc = json.load(file)
         try:
-            return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'],
-                          cc['output'], cc['force_msg_case'])
+            if cfSUBSYS is not None:
+                cc = config_subsys(cc)
+                with open('config.json', 'w') as file:
+                    file.write(json.dumps(cc, sort_keys=True, indent=4))
+            return Config(cc['allow_cmdln'], cc['multi_in'], cc['output'])
         except KeyError:
             print("Error [I.C1]: Invalid config file, you can retry and specify a different JSON file.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     config_fileloc = input("cA_filepath: ")
+                    if cfSUBSYS is not None:
+                        return config_handler(config_fileloc, True)
                     return config_handler(config_fileloc)
                 else:
                     os._exit(0)
@@ -90,13 +133,18 @@ def config_handler(fileloc: str = '') -> Config:
         with open(fileloc) as file:
             cc = json.load(file)
         try:
-            return Config(cc['allow_cmdln'], cc['casemod'], cc['force_case'], cc['lower_msg'], cc['multi_in'],
-                          cc['output'], cc['force_msg_case'])
+            if cfSUBSYS is not None:
+                cc = config_subsys(cc)
+                with open('config.json', 'w') as file:
+                    file.write(json.dumps(cc, sort_keys=True, indent=4))
+            return Config(cc['allow_cmdln'], cc['multi_in'], cc['output'])
         except KeyError:
             print("Error [I.C2]: Invalid config file, you can retry and specify a different file location.")
             try:
                 if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                     config_fileloc = input("cA_filepath: ")
+                    if cfSUBSYS is not None:
+                        return config_handler(config_fileloc, True)
                     return config_handler(config_fileloc)
                 else:
                     os._exit(0)
@@ -106,8 +154,11 @@ def config_handler(fileloc: str = '') -> Config:
         with open('config.json', 'w') as file:
             file.write(cc)
         cc = json.loads(cc)
-        return Config(bool(cc['allow_cmdln']), bool(cc['casemod']), bool(cc['force_case']), bool(cc['lower_msg']),
-                      bool(cc['multi_in']), cc['output'], bool(cc['force_msg_case']))
+        if cfSUBSYS is not None:
+            cc = config_subsys(cc)
+            with open('config.json', 'w') as file:
+                file.write(json.dumps(cc, sort_keys=True, indent=4))
+        return Config(bool(cc['allow_cmdln']), bool(cc['multi_in']), cc['output'])
 
 
 def expanding_hash(invar: str, length: int = 5000) -> str:
@@ -275,12 +326,6 @@ def Aencode2(config: Config, key: str or None) -> None:
                 os._exit(0)
         print("WARNING: These characters are known to not be able to be encrypted currently: $^")
         message = input("Message: ")
-        if key[-4:] != ".msg" and config.lower_msg and config.force_case or \
-                (key[-4:] == ".msg" and config.force_msg_case and config.lower_msg and config.force_case):
-            message = message.lower()
-        elif key[-4:] != ".msg" and not config.lower_msg and config.force_case or \
-                (key[-4:] == ".msg" and config.force_msg_case and not config.lower_msg and config.force_case):
-            message = message.upper()
         messagefinal = []
         if key is not None:
             if key[-4:] != ".msg" and fileloc != '':
@@ -315,45 +360,51 @@ def Aencode2(config: Config, key: str or None) -> None:
         strfile = origstrfile.replace("\n", "")
         t0 = time.time()
         for ch in message:
-            try:  # Future To Do: $ appears to break the new encryption system
-                if ch != ".":  # Future To Do: It appears ^ is another escape character that's weird. To research and fix later.
-                    chars = [m.start() for m in re.finditer(ch, strfile)]
-                    if len(chars) == 0 and ch.upper() != ch.lower():
-                        if ch.isupper() and config.casemod:
-                            charused = random.choice([m.start() for m in re.finditer(ch.lower(), strfile)])
-                            basecharused = charused
-                            print("Warning: Character case has been modified.")
-                        elif ch.islower() and config.casemod:
-                            charused = random.choice([m.start() for m in re.finditer(ch.upper(), strfile)])
-                            basecharused = charused
-                            print("Warning: Character case has been modified.")
-                        else:
-                            try:
-                                basecharused = random.choice(range(len(strfile)))*-1  # Get position of random ch * -1
-                                messagefinal.append(basecharused)  # Append
-                                charused = ord(strfile[-1*basecharused])*ord(ch)  # Multiply ord together for 2nd append
-                            except:
-                                print("Error [II.E2]: Couldn't encrypt message."
-                                      "Unused character not found in key.")
-                                try:
-                                    if input("Retry with a new key (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
-                                        Aencode2(config, None)
-                                    else:
-                                        os._exit(0)
-                                except IndexError:
-                                    os._exit(0)
-                    else:
+            try:
+                if ch not in [".", "$", "^"]:
+                    if ch in strfile:
+                        chars = [m.start() for m in re.finditer(ch, strfile)]
                         charused = random.choice(chars)
                         basecharused = charused
+                    elif ch not in strfile:
+                        try:
+                            basecharused = random.choice(range(len(strfile)))*-1
+                            messagefinal.append(basecharused)
+                            charused = ord(strfile[-1*basecharused])*ord(ch)
+                        except:
+                            print("Error [II.E2]: Couldn't encrypt message."
+                                  "Exception thrown encrypting character not found in key.")
+                            try:
+                                if input("Retry with a new key (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                    Aencode2(config, None)
+                                else:
+                                    os._exit(0)
+                            except IndexError:
+                                os._exit(0)
                 else:
-                    charused = random.choice([m.start() for m in re.finditer("\.", strfile)])
-                    basecharused = charused
+                    if ch == "." and ch in strfile:
+                        charused = random.choice([m.start() for m in re.finditer("\.", strfile)])
+                        basecharused = charused
+                    else:
+                        try:
+                            basecharused = random.choice(range(len(strfile))) * -1
+                            messagefinal.append(basecharused)
+                            charused = ord(strfile[-1 * basecharused]) * ord(ch)
+                        except:
+                            print("Error [II.E4]: Couldn't encrypt message."
+                                  "Couldn't encrypt '$' or '^' character.")
+                            try:
+                                if input("Retry with a new key (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                                    Aencode2(config, None)
+                                else:
+                                    os._exit(0)
+                            except IndexError:
+                                os._exit(0)
             except:
-                # Use any unused character, modify and signify, modded character
                 try:
-                    basecharused = random.choice(range(len(strfile))) * -1  # Get position of random ch * -1
-                    messagefinal.append(basecharused)  # Append
-                    charused = ord(strfile[-1 * basecharused]) * ord(ch)  # Multiply ords together for 2nd append
+                    basecharused = random.choice(range(len(strfile))) * -1
+                    messagefinal.append(basecharused)
+                    charused = ord(strfile[-1 * basecharused]) * ord(ch)
                 except:
                     print("Error [II.E3]: Couldn't encrypt message. Character not found in key.")
                     try:
@@ -388,6 +439,8 @@ def Aencode2(config: Config, key: str or None) -> None:
 IDEAS:
 Future iterations of encrypting characters not found in the key could perhaps implement primes in calculations?
 
+Add config option to allow for more input methods, such as reading files as an input message, etc.
+
 Reorder so the unhandled/unused characters are used first so only one [m.start()] list comp. is executed.
 Increases efficiency, and very well could fix some of the oddities below. UPDATE: Above comment works best in theory,
 still best to attempt to only use one instance of list comprehension per character to increase efficiency.
@@ -414,8 +467,10 @@ still best to attempt to only use one instance of list comprehension per charact
   14. Create failsafe if ch is not found, end program, prompt for retry with a new key [X]
   15. Create administrative documentation and changelog for posterity [while True: WIP]
   16. Implement a function which simply uses any key to securely use with current method [X]
-  17. Implement changing of unused characters in key for any character accepted as valid [WIP]
-  18. Implement whole base program command line functionality [ ]
+  17. Implement changing of unused characters in key for any character accepted as valid [X]
+  18. Rework <C> option for <A_func> prompt for current config handling not being persistent [X]
+  19. Implement whole base program command line functionality [ ]
+  20. Introduce dynamic hashing of key to increase size as necessary [ ]
   ??. Implement custom config path persistence securely [ ]
   99. Create a new version which simply uses any key to securely use with no fail state. (Similar to AES) [ ]
 '''
@@ -676,17 +731,15 @@ def Adecode2(config: Config, fileloc: str) -> None:
                                     ch = chr(int(nxt / ord(strfile[basech])))
                                     finalmessage.append(ch)
                                     encryptedmessage = encryptedmessage[1:]
-                                except Exception as err:
+                                except:
                                     print("Error [III.9C]: Could not resolve character not found in key")
-                                    print(err)
                             else:
                                 finalmessage.append(strfile[locationbuild])
                             strfile = strfile[:abs(int(locationbuild))]+strfile[abs(int(locationbuild))+1:]
                             locationbuild = ""
-                    except Exception as err:
+                    except:
                         print("Error [III.D2]: Unable to decrypt message. "
                               "Probable Cause: Incorrect/Too Small of a key file.")
-                        print(err)
                         try:
                             if input("Retry (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
                                 Adecode2(config, Adecode1(config))
@@ -809,7 +862,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.9.1")
+    print("A_version: 1.9.2")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     try:
         if EncOrDec[0] == 'e':
@@ -820,8 +873,9 @@ def main():
             config = config_handler()
             Adecode2(config, Adecode1(config))
         elif EncOrDec[0] == 'c':
-            config_fileloc = input("cA_filepath: ")
-            config_handler(config_fileloc)
+            print("NOTE: Only a 'config.json' file in the same directory as Apocrypha.py will be accepted currently")
+            # config_fileloc = input("cA_filepath: ")
+            config_handler("config.json", True)
             _ = os.system('cls' if os.sys.platform == 'win32' else 'clear')
             os.execl(sys.executable, sys.executable, *sys.argv)
         else:
