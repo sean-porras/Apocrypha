@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.9.3    #
+#    V.1.9.4    #
 #    V.1.1.0    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
@@ -194,3 +194,11 @@ For the future implementation:
     This would scale the time complexity as necessary and overall increase efficiency.
  ~ New and improved documentation including standardization of symbol/entry meanings!
     No more random symbols which happen to describe what I think would be good for that entry at that moment.
+
+[Feb. 2, 2022]
+{AD} 1.9.3 --> 1.9.4
+ + Introduced dynamic sizing of key according to the size of the message, increasing efficiency and scalability.
+{SD} 1.1.0 (Version 6) --> 1.1.1 (Version 7) == {AD} 1.9.2 --> 1.9.4
+ @ Above changes made from {AD} 1.9.2 to {AD} 1.9.4 will be applied.
+{PLANS}
+ ~ With this update, the Apocrypha.py 2.0 rewrite begins. When complete, a Java port will begin development.

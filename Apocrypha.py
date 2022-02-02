@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.9.3    #
+#    V.1.9.4    #
 #################
 """
 -=#=- Administrative Distribution Internal Documentation [ADID] -=#=-
@@ -320,7 +320,7 @@ def Aencode2(config: Config, key: str or None) -> None:
                 file.close()
             else:
                 try:
-                    origstrfile = expanding_hash(key[:-4])
+                    origstrfile = expanding_hash(key[:-4], max(1, len(key[:-4])))
                 except IndexError:
                     try:
                         print("Error [II.K1]: Invalid key. Likely blank key entered.")
@@ -457,7 +457,8 @@ still best to attempt to only use one instance of list comprehension per charact
   18. Rework <C> option for <A_func> prompt for current config handling not being persistent [X]
   19. Implement whole base program command line functionality [WIP]
         Flag idea: [-rf <filepath>] with file with command line arguments on each line.
-  20. Introduce dynamic hashing of key to increase size as necessary [ ]
+  20. Introduce dynamic hashing of key to increase size as necessary [X]
+  21. Rewrite for Apocrypha 2.0 to implement complete command line functionality [ ]
   ??. Implement custom config path persistence securely [ ]
   99. Create a new version which simply uses any key to securely use with no fail state. (Similar to AES) [ ]
 '''
@@ -490,7 +491,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                         file.close()
                 else:
                     try:
-                        origstrfile = expanding_hash(fileloc[:-4])
+                        origstrfile = expanding_hash(fileloc[:-4], max(1, len(fileloc[:-4])))
                     except IndexError:
                         try:
                             print("Error [III.K1]: Invalid key. Likely blank key entered.")
@@ -848,7 +849,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.9.3")
+    print("A_version: 1.9.4")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     try:
         if EncOrDec[0] == 'e':
