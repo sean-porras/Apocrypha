@@ -1,6 +1,6 @@
 #################
 #   APOCRYPHA   #
-#    V.1.1.0    #
+#    V.1.1.1    #
 #################
 import os
 import re
@@ -26,14 +26,11 @@ class Config:
     The Config class object is used to create an easy library of attributes.
     These dictate the functions of the Apocrypha program.
 
-    allow_cmdln: default True. Dictates whether or not command line can be used given all arguments
-        rather than needing to go through the program step by step. ### CURRENTLY UNIMPLEMENTED ###
     multi_in: default False. Dictates whether or not multiple runs of Apoc will be run on a single file
         containing commands for each separate result. ### CURRENTLY UNIMPLEMENTED ###
     output: default 'print'. Dictates what form the output of Apoc will be given as. Currently
         only supports printing the output. Future support for .txt, .json, and .apoc formats.
     """
-    allow_cmdln: bool = True
     multi_in: bool = False
     output: str = "print"  # in ['print', '.txt', '.json', '.apoc']
 
@@ -46,7 +43,7 @@ def config_subsys(cf: dict) -> dict:
     :return: Dictionary; Modified cf dictionary post-user processing.
     """
     stay = True
-    default = {'allow_cmdln': True, 'multi_in': False, 'output': 'print'}
+    default = {'multi_in': False, 'output': 'print'}
     print("Config Handler Subsystem. Type 'help' for commands.")
     while stay:
         inp = input("> ").lower()
@@ -56,7 +53,6 @@ def config_subsys(cf: dict) -> dict:
             print("Commands:\n"
                   "help: prints out this list\n"
                   "default: Returns all values to their defaults\n"
-                  "allow_cmdln: Allows you to edit the 'allow_cmdln' config option\n"
                   "multi_in: Allows you to edit the 'multi_in' config option\n"
                   "output: Allows you to edit the 'output' config option\n"
                   "exit/quit: Exits the Config Handler Subsystem\n")
@@ -65,14 +61,6 @@ def config_subsys(cf: dict) -> dict:
         elif inp == "default":
             cf = default
             stay = False
-        elif inp == "allow_cmdln":
-            print("allow_cmdln is currently: "+str(cf['allow_cmdln']))
-            print("Valid options: True, False")
-            opt = input(">>> ")
-            if opt in ["True", "False"]:
-                cf['allow_cmdln'] = bool(opt)
-            else:
-                print("Invalid Input.")
         elif inp == "multi_in":
             print("multi_in is currently: "+str(cf['multi_in']))
             print("Valid options: True, False")
@@ -100,7 +88,7 @@ def config_handler(fileloc: str = '', cfSUBSYS: bool = None) -> Config:
     :param cfSUBSYS: bool; None by default, if not None, allows the user to change config options
     :returns: Config object
     """
-    cd = {'allow_cmdln': True, 'multi_in': False, 'output': 'print'}
+    cd = {'multi_in': False, 'output': 'print'}
     cc = json.dumps(cd, sort_keys=True, indent=4)
     if Path('config.json').exists() or (fileloc == '' and Path('config.json').exists()):
         with open('config.json') as file:
@@ -110,7 +98,7 @@ def config_handler(fileloc: str = '', cfSUBSYS: bool = None) -> Config:
                 cc = config_subsys(cc)
                 with open('config.json', 'w') as file:
                     file.write(json.dumps(cc, sort_keys=True, indent=4))
-            return Config(cc['allow_cmdln'], cc['multi_in'], cc['output'])
+            return Config(cc['multi_in'], cc['output'])
         except KeyError:
             print("Error [I.C1]: Invalid config file, you can retry and specify a different JSON file.")
             try:
@@ -131,7 +119,7 @@ def config_handler(fileloc: str = '', cfSUBSYS: bool = None) -> Config:
                 cc = config_subsys(cc)
                 with open('config.json', 'w') as file:
                     file.write(json.dumps(cc, sort_keys=True, indent=4))
-            return Config(cc['allow_cmdln'], cc['multi_in'], cc['output'])
+            return Config(cc['multi_in'], cc['output'])
         except KeyError:
             print("Error [I.C2]: Invalid config file, you can retry and specify a different file location.")
             try:
@@ -152,7 +140,7 @@ def config_handler(fileloc: str = '', cfSUBSYS: bool = None) -> Config:
             cc = config_subsys(cc)
             with open('config.json', 'w') as file:
                 file.write(json.dumps(cc, sort_keys=True, indent=4))
-        return Config(bool(cc['allow_cmdln']), bool(cc['multi_in']), cc['output'])
+        return Config(bool(cc['multi_in']), cc['output'])
 
 
 def expanding_hash(invar: str, length: int = 5000) -> str:
@@ -206,8 +194,7 @@ def Aencode1(config: Config) -> str or None:
     :param config: Config obj; Config object which allows for config options to be utilized.
     :return: str (valid link or custom key) or None (indicative of txt, json, or apoc file)
     """
-    gentype = input("eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: ")
-    gentype = gentype.lower().strip()
+    gentype = input("eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: ").lower().strip()
     if gentype[:6] == "python":
         try:
             pynum = int(gentype[6:].strip())
@@ -327,7 +314,7 @@ def Aencode2(config: Config, key: str or None) -> None:
                 file.close()
             else:
                 try:
-                    origstrfile = expanding_hash(key[:-4])
+                    origstrfile = expanding_hash(key[:-4], max(1, len(key[:-4])))
                 except IndexError:
                     try:
                         print("Error [II.K1]: Invalid key. Likely blank key entered.")
@@ -361,9 +348,9 @@ def Aencode2(config: Config, key: str or None) -> None:
                         basecharused = charused
                     elif ch not in strfile:
                         try:
-                            basecharused = random.choice(range(len(strfile)))*-1  # Get position of random ch * -1
-                            messagefinal.append(basecharused)  # Append
-                            charused = ord(strfile[-1*basecharused])*ord(ch)  # Multiply ord together for 2nd append
+                            basecharused = random.choice(range(len(strfile)))*-1
+                            messagefinal.append(basecharused)
+                            charused = ord(strfile[-1*basecharused])*ord(ch)
                         except:
                             print("Error [II.E2]: Couldn't encrypt message."
                                   "Exception thrown encrypting character not found in key.")
@@ -455,7 +442,7 @@ def Adecode2(config: Config, fileloc: str) -> None:
                         file.close()
                 else:
                     try:
-                        origstrfile = expanding_hash(fileloc[:-4])
+                        origstrfile = expanding_hash(fileloc[:-4], max(1, len(fileloc[:-4])))
                     except IndexError:
                         try:
                             print("Error [III.K1]: Invalid key. Likely blank key entered.")
@@ -726,8 +713,7 @@ def Adecode1(config: Config) -> str:
     :param config: Config obj; Config object which allows for config options to be utilized.
     :return: Str; File path or key with appended '.msg' string to be processed by Adecode2
     """
-    keyformat = input("dA_k.format[<link{full;param};file;msg>]: ")
-    keyformat = keyformat.lower()
+    keyformat = input("dA_k.format[<link{full;param};file;msg>]: ").lower().strip()
     if keyformat == "linkparam":
         locreq = input("dA_param = ")
         if locreq[0] == '?':
@@ -814,7 +800,7 @@ def Adecode1(config: Config) -> str:
 
 
 def main():
-    print("A_version: 1.1.0")
+    print("A_version: 1.9.4")
     EncOrDec = input("A_func<E;D;C>: ").lower()
     try:
         if EncOrDec[0] == 'e':
@@ -849,5 +835,144 @@ def main():
             os._exit(0)
 
 
+def cmd_ln(args: list) -> dict:
+    """
+    Given a list of arguments from the command line, returns a dictionary of the program procedure and their values.
+    :param args: List; Command Line Arguments sans "Apocrypha.py"
+    :return: Dict; Procedure of the program with values for each prompt.
+    """
+    def err() -> None:
+        print("Usage: python3 Apocrypha.py [--globals] [<function> <key gen/type> <key/filepath> <message>] [-f FILE]")
+        try:
+            if input("Run main (default: No)? [Y]es/[N]o: ").lower().strip()[0] == "y":
+                main()
+            else:
+                os._exit(0)
+        except IndexError:
+            os._exit(0)
+    procedure = {
+        "A_func": None,  # in ["e", "d", None]
+        "eA_gen.type": None,  # in ["file", "msg", None] for 1st iteration
+        "dA.k_format": None,  # in ["file", "msg", None] for 1st iteration
+        "eA_filepath": None,
+        "eA_key": None,
+        "Message": None,
+        "dA_filepath": None,
+        "dA_key": None,
+        "Encrypted Message": None
+    }
+    global_flags = [gf for gf in args if "--" in gf[:2]]
+    if "--help" in global_flags or "--usage" in global_flags:
+        print("Usage: python3 Apocrypha.py [--globals] [<E;D;C>] [<key gen/type>] [<key/filepath>] [<message>] [-f "
+              "<filepath>]")
+    for argg in args:
+        if argg in global_flags:
+            args.remove(argg)
+    for arg in args:
+        if [procedure['Encrypted Message'], procedure['Message']] == [None, None] and \
+                ([procedure['eA_key'], procedure['dA_key']] != [None, None] or
+                 [procedure['eA_filepath'], procedure['dA_filepath']] != [None, None]):
+            try:
+                if arg != "":
+                    if procedure['eA_key'] is not None or procedure['eA_filepath'] is not None:
+                        procedure['Message'] = arg
+                    elif procedure['dA_key'] is not None or procedure['dA_filepath'] is not None:
+                        procedure['Encrypted Message'] = arg
+                    else:
+                        raise Exception
+            except:
+                print("Error [I.A5]: Command line message input error.")
+                err()
+        elif ([procedure['eA_key'], procedure['dA_key']] == [None, None] or
+                [procedure['eA_filepath'], procedure['dA_filepath']] == [None, None]) and \
+                [procedure['dA.k_format'], procedure['eA_gen.type']] != [None, None]:
+            try:
+                if arg != "":
+                    if procedure['eA_gen.type'] is not None:
+                        if procedure['eA_gen.type'] == "file":
+                            procedure['eA_filepath'] = arg
+                        elif procedure['eA_gen.type'] == "msg":
+                            procedure['eA_key'] = arg
+                        else:
+                            raise Exception
+                    elif procedure['dA.k_format'] is not None:
+                        if procedure['dA.k_format'] == "file":
+                            procedure['dA_filepath'] = arg
+                        elif procedure['dA.k_format'] == "msg":
+                            procedure['dA_key'] = arg
+                        else:
+                            raise Exception
+                    else:
+                        raise Exception
+            except:
+                print("Error [I.A4]: Command line key or filepath error.")
+                err()
+        elif [procedure['dA.k_format'], procedure['eA_gen.type']] == [None, None] and procedure['A_func'] is not None:
+            try:
+                if procedure['A_func'] == "e":
+                    procedure['eA_gen.type'] = arg
+                elif procedure['A_func'] == "d":
+                    procedure['dA.k_format'] = arg
+                else:
+                    raise Exception
+            except:
+                print("Error [I.A3]: Command line key format or generation error.")
+                err()
+        elif procedure['A_func'] is None:
+            try:
+                if arg.lower()[0] in ["e", "d"]:
+                    if arg.lower()[0] == "e":
+                        procedure['A_func'] = "e"
+                    elif arg.lower()[0] == "d":
+                        procedure['A_func'] = "d"
+                    else:
+                        raise IndexError
+            except IndexError:
+                print("Error [I.A2]: A_func command line processing error.")
+                err()
+        else:
+            print("Error [I.A1]: Else condition met in cmd_ln() function.")
+            err()
+    return procedure
+
+
+def cmd_main(argvs: list) -> None:
+    """
+    The main program for the command line.
+    :param argvs: List; Command line arguments sans given "Apocrypha.py"
+    :return: None; Calls other functions to carry out functionality as necessary.
+    """
+    print("Command Line Usage: python3 Apocrypha.py [--help;--usage]\n"
+          "Limited Command Line functionality has been implemented.\n")
+    prog = cmd_ln(argvs)
+    config = config_handler()
+    if prog['A_func'] is None:
+        main()
+    elif prog['A_func'] is not None and [prog['eA_gen.type'], prog['dA.k_format']] == [None, None]:
+        if prog['A_func'] == "e":
+            k = Aencode1(config)
+            Aencode2(config, k)
+        elif prog['A_func'] == "d":
+            Adecode2(config, Adecode1(config))
+        else:
+            print("Error [I.P1]: Program command line processing error in A_func logic.\nRunning main")
+            main()
+    elif prog['eA_gen.type'] == "file" and prog['eA_filepath'] is None:
+        Aencode2(config, None)
+    elif prog['eA_gen.type'] == "msg" and prog['eA_key'] is not None and prog['Message'] is None:
+        Aencode2(config, prog['eA_key'] + ".msg")
+    elif prog['dA_key'] is not None and prog['Encrypted Message'] is None:
+        Adecode2(config, prog['dA_key'] + ".msg")
+    elif prog['dA_filepath'] is not None and prog['Encrypted Message'] is None:
+        Adecode2(config, prog['dA_filepath'])
+    else:
+        print("Unimplemented command line case, running main program")
+        main()
+
+
 if __name__ == "__main__":
-    main()
+    args = sys.argv[1:]
+    if len(args) == 0:
+        main()
+    else:
+        cmd_main(args)

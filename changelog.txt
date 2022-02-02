@@ -2,7 +2,7 @@
 #   APOCRYPHA   #
 #   CHANGELOG   #
 #    V.1.9.4    #
-#    V.1.1.0    #
+#    V.1.1.1    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
 {AD} Administrative Distribution

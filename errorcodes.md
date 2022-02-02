@@ -2,7 +2,7 @@
 
 ### Up to date with
 ![version](https://img.shields.io/badge/Admin_Version-1.9.4-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.1.1-brightgreen.svg)
 
 Error codes are up-to-date with the latest Admin Distribution, errors found in the Stable Distribution are consistent
 but may not include all errors listed, as some errors are caused by features not currently in the Stable Distribution.

@@ -9,7 +9,7 @@
 ## Description
 
 ![version](https://img.shields.io/badge/Admin_Version-1.9.4-blue.svg)
-![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
+![stableversion](https://img.shields.io/badge/Stable_Version-1.1.1-brightgreen.svg)
 ![documentation](https://img.shields.io/badge/documentation-passing-brightgreen.svg)
 
 The Apocrypha cipher takes a message and a key given by the user
