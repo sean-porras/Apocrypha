@@ -270,7 +270,7 @@ def Aencode1(config: Config) -> str or None:
                 print(eAlink)
                 return eAlink
     elif gentype == "file":
-        print("WARNING: If you use a non-Apocrypha text file, it will not be as secure.")
+        print("WARNING: If you use a non-Apocrypha text file, it may not be as secure.")
         return None
     elif gentype == "msg":
         eAkey = input("eA_key = ") + ".msg"
@@ -318,7 +318,6 @@ def Aencode2(config: Config, key: str or None) -> None:
                     os._exit(0)
             except IndexError:
                 os._exit(0)
-        print("WARNING: These characters are known to not be able to be encrypted currently: $^")
         message = input("Message: ")
         messagefinal = []
         if key is not None:
