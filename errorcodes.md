@@ -1,7 +1,7 @@
 # Error Codes
 
 ### Up to date with
-![version](https://img.shields.io/badge/Admin_Version-1.9.2-blue.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.3-blue.svg)
 ![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
 
 Error codes are up-to-date with the latest Admin Distribution, errors found in the Stable Distribution are consistent
@@ -48,6 +48,41 @@ valid config file for the program. I.C2 signifies a custom filepath for the conf
 It's highly recommended to just use the default config file and edit it as necessary, but default values should suffice
 for most widespread usage. You can delete the config file and rerun the program which will automatically generate a new
 valid config file in its place. You can regain default settings this way for your config file.
+
+### I.A1
+>"Error [I.A1]: Else condition met in cmd_ln() function."
+
+Originates in the `cmd_ln` function when the else is triggered. This means for whatever reason, there is something wrong
+with the initialization of the procedure dictionary which processes the command line arguments passed as the main
+program would prompt.
+
+### I.A2
+>"Error [I.A2]: A_func command line processing error."
+
+Originates in the `cmd_ln` function when the first command line argument is invalid.
+
+This is likely due to the first argument not being either "e" or "d". NOTE: You can have anything as the first argument,
+so long as the first letter is either an `e` or `d`, the program automatically checks the first letter after making it
+lowercase, so it is also not case-sensitive for this option. So `EXIT` as a first command line argument will be
+processed as a valid `e` input for the `A_func` prompt via command line, just as it is in the main program.
+
+### I.A3
+>"Error [I.A3]: Command line key format or generation error."
+
+Originates in the `cmd_ln` function when the eA.gen_type or dA.k_format fail.
+This is likely due to an invalid `A_func` prompt input.
+
+### I.A4
+>"Error [I.A4]: Command line key or filepath error."
+
+Originates in the `cmd_ln` function when the key/msg or filepath is being processed.
+Likely due to an invalid key format from either encryption or decryption, or None values for both.
+
+### I.A5
+>"Error [I.A5]: Command line message input error."
+
+Originates in the `cmd_ln` function when the final message-to-be-encrypted or encrypted message throws an exception.
+This is likely due to the key and filepath procedure dictionary entries are both None.
 
 ---
 

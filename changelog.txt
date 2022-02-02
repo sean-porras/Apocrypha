@@ -1,7 +1,7 @@
 #################
 #   APOCRYPHA   #
 #   CHANGELOG   #
-#    V.1.9.2    #
+#    V.1.9.3    #
 #    V.1.1.0    #
 #################
 [Sept. 2, 2021] 1.7.1 --> 1.7.5
@@ -176,3 +176,21 @@ For the future implementation:
 {SD} 1.0.1 --> 1.1.0 (Version 5 --> 6) == {AD} 1.8.7 --> 1.9.2
  + Ability to now encrypt all characters even without them being present in the key.
  & All other features and changes made to {AD} 1.9.2 as described above, these versions are equivalent.
+
+[Jan. 31 - Feb. 2, 2022]
+{AD} 1.9.2 --> 1.9.3
+ + Added limited command line functionality, large rewrite necessary for full command line functionality currently.
+ - Removed allow_cmdln from Config, as it's effectively unnecessary to potentially config-block a feature.
+{SD} 1.1.0
+ ~ Small semantic change to a warning message when using the custom file option.
+{DOCS}
+ ~ Updated readme documentation and error codes documentation.
+ + Added Usage section to readme.md so that use of the program is explained and accessible.
+{PLANS}
+ ~ Apocrypha 2.0 will come with a large rewrite/overhaul of the current organization such that full
+    command line functionality is possible (that being any number of arguments can be passed and the program
+    can pick up where the arguments have yet to be fulfilled)
+ ~ Ideally, I'd also like to implement the dynamic hashing of the key to match the size of the message.
+    This would scale the time complexity as necessary and overall increase efficiency.
+ ~ New and improved documentation including standardization of symbol/entry meanings!
+    No more random symbols which happen to describe what I think would be good for that entry at that moment.

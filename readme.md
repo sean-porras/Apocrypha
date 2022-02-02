@@ -8,7 +8,7 @@
 
 ## Description
 
-![version](https://img.shields.io/badge/Admin_Version-1.9.2-blue.svg)
+![version](https://img.shields.io/badge/Admin_Version-1.9.3-blue.svg)
 ![stableversion](https://img.shields.io/badge/Stable_Version-1.1.0-brightgreen.svg)
 ![documentation](https://img.shields.io/badge/documentation-passing-brightgreen.svg)
 
@@ -32,6 +32,253 @@ changing the key as it encrypts.
 ----
 ----
 
+## Usage
+
+_This guide will walkthrough a set of basic scenarios for encryption, decryption, and using the config modification
+subsystem. NOTE: This guide won't walk through EVERY scenario, but will explain inputs in each example run._
+
+The `|` character will indicate where an input is requested from the user.
+
+---
+
+###How to encrypt with a custom message.
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: |
+```
+
+From here you can enter anything that starts with the letters `e`, `d`, or `c` as valid input options, in our case, we
+want to enter anything that begins with the letter `e`. Inputs here are _NOT_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: e
+eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: |
+```
+
+Here is the encryption prompt for the key format to either be generated or used. In this case, we want to use a custom
+message, so we input `msg`. NOTE: Inputs here are _NOT_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: e
+eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
+eA_key = |
+```
+
+Here you input what key you want to use for encrypting your message. This _IS_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: e
+eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
+eA_key = This is a custom key
+Message: |
+```
+
+Here is where you input the message you want to encrypt with your entered custom key. All characters on a standard en_US
+keyboard have been confirmed to work, and in theory, all Unicode characters should work as well, but this is not tested.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: e
+eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
+eA_key = This is a custom key
+Message: Super Seeecret Message!
+
+Time: 0.005131959915161133
+
+Encrypted Message:
+
+[[685, 2910, 2985, 3999, 4195, 3460, 3522, 3629, 3724, 4595, 4916, 736, 687, 1001, 3472, 1758, 1618, 4823, 4127, 4337, 4770, 1697, -933, 3399], '22c8c32bd4ef6a7490f11607b9dd4e1f97a01089339d0eacdf27669da8450a72']
+
+Press enter when done: |
+```
+
+Now you have the encrypted message as well as how long it took to encrypt the message printed out for you for copying
+and sending. The string of numbers is the encrypted message itself, so in a pinch, you can send just that (NOTE: _MUST_
+include the square brackets, eg `[1, 2, 3]`). The string of numbers and letters after the list of numbers is the final
+hash of the key after encryption used to guarantee during decryption that the message matches with the key.
+
+---
+
+###How to decrypt with a custom message
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: |
+```
+
+From here you can enter anything that starts with the letters `e`, `d`, or `c` as valid input options, in our case, we
+want to enter anything that begins with the letter `d`. Inputs here are _NOT_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: d
+dA_k.format[<link{full;param};file;msg>]: |
+```
+
+Here is the decryption prompt for the key format to either be generated or used. In this case, we want to use a custom
+message, so we input `msg`. NOTE: Inputs here are _NOT_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: d
+dA_k.format[<link{full;param};file;msg>]: msg
+dA_key = |
+```
+
+Here you input what key you want to use for decrypting your message. This _IS_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: d
+dA_k.format[<link{full;param};file;msg>]: msg
+dA_key = This is a custom key
+dA_eM: |
+```
+
+Here is where you enter the encrypted message. It should, in a basic form, look something similar to
+`[[1, 2, 3], '2uh75vh32ilu3v25bo873eljt325h1']`, although much longer.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: d
+dA_k.format[<link{full;param};file;msg>]: msg
+dA_key = This is a custom key
+dA_eM: [[685, 2910, 2985, 3999, 4195, 3460, 3522, 3629, 3724, 4595, 4916, 736, 687, 1001, 3472, 1758, 1618, 4823, 4127, 4337, 4770, 1697, -933, 3399], '22c8c32bd4ef6a7490f11607b9dd4e1f97a01089339d0eacdf27669da8450a72']
+Decrypted Message:
+
+Super Seeecret Message!
+
+Key Hash Match: True
+
+Message Final Key Hash: 22c8c32bd4ef6a7490f11607b9dd4e1f97a01089339d0eacdf27669da8450a72
+Current Final Key Hash: 22c8c32bd4ef6a7490f11607b9dd4e1f97a01089339d0eacdf27669da8450a72
+Start Initial Key Hash: 6a1760f236570743b0f06a790bc93ee972972d8f22bbbbe36e6af94babadb9a2
+
+Press enter to close the program. |
+```
+
+Here you have the results of your decryption, complete with what the decrypted message is, if the final key hashes
+matched, what they were, and what the initial key hash was.
+
+---
+
+####Using the config subsystem
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: |
+```
+
+From here you can enter anything that starts with the letters `e`, `d`, or `c` as valid input options, in our case, we
+want to enter anything that begins with the letter `c`. Inputs here are _NOT_ case-sensitive.
+
+---
+
+```
+A_version: 1.9.3
+A_func<E;D;C>: c
+NOTE: Only a 'config.json' file in the same directory as Apocrypha.py will be accepted currently
+Config Handler Subsystem. Type 'help' for commands.
+> |
+```
+
+The `help` command in the config handler subsystem acts as its own usage guide, as it's not recommended modifying config
+settings unless you really know what you're doing. (Note: Currently, as of {AD} 1.9.3, the config currently has no real
+functionality, this is planned to change, but all modifiable functionality previously has been integrated already.)
+
+---
+
+###Limited Command Line Functionality
+
+You can bypass certain prompts using the command line to streamline the process of encryption and decryption, but
+currently, a prompted input is still required even given command line arguments.
+
+_Full command line functionality and support given any number of arguments is planned for the future along with a
+rewrite of the program as a whole to allow this functionality._
+
+---
+
+>To get the usage message for the command line
+
+`python3 Apocrypha.py --help`
+OR
+`python3 Apocrypha.py --usage`
+
+`Usage: python3 Apocrypha.py [--globals] [<E;D;C>] [<key gen/type>] [<key/filepath>] [<message>] [-f <filepath>]`
+
+NOTE: Non-global flags shown in the usage message (eg. `[-f <filepath>]`) haven't been implemented yet.
+
+The program then runs the program according to the rest of the arguments given, otherwise runs the main program.
+
+---
+
+>To begin the encryption process from `eA_gen.type` prompt
+
+`python3 Apocrypha.py e`
+
+---
+
+>To begin the decryption process from `dA_k.format` prompt
+
+`python3 Apocrypha.py d`
+
+---
+
+>To use a custom message in encryption, key pre-entered.
+>If the key is a single word, quotations are not needed.
+
+`python3 Apocrypha.py e msg "This is a custom key"`
+
+You will be prompted for the `Message:` to encrypt.
+
+---
+
+>To use a custom message in decryption, key pre-entered.
+>If the key is a single word, quotations are not needed.
+
+`python3 Apocrypha.py d msg "This is a custom key"`
+
+You will be prompted with `dA_eM:` for the encrypted message to decrypt.
+
+---
+
+>To use a custom file in encryption
+
+`python3 Apocrypha.py e file`
+
+You will be prompted for `eA_filepath` and continue from there.
+
+---
+
+>To use a custom file in decryption, filepath given
+
+`python3 Apocrypha.py d file <filepath>`
+
+You will be prompted for the `Encrypted Message:` to decrypt.
+
+----
+----
+
 ## Documentation
 
 ### Class Objects
@@ -40,11 +287,6 @@ changing the key as it encrypts.
 
 The `Config` class object is used to create an easy library of attributes.
 These dictate the functions of the Apocrypha program.
-
----
----
-
->######TO BE IMPLEMENTED: `allow_cmdln`: default `True`. Dictates whether or not command line can be used given all arguments rather than needing to go through the program step by step.
 
 ---
 
@@ -64,9 +306,9 @@ only supports printing the output. Future support for .txt, .json, and .apoc for
 
 _Generates and returns a key to be used for encryption in Aencode2._
 
->Parameter _config:_ Config object which allows for config options to be utilized.
+>Parameter `config`: `Config` object which allows for config options to be utilized.
 > 
->Returns: str (valid link) or None (indicative of txt, json, or apoc file)
+>Returns: `str` (valid link) or `None` (indicative of txt, json, or apoc file)
 
 The first step in the Apocrypha encryption process. Works to determine the key that'll be used,
 and create one if necessary. Takes user input to create either a link using the secrets module as
@@ -97,16 +339,12 @@ The program then prompts for the message the user wants to encrypt after validat
 It then encrypts the message using the Apocrypha method: Find and compile a list of all indexes of characters matching
 the current character being encrypted of the message in the key. It then selects a random one of those characters
 and deletes it from the key file, which then changes the file to then repeat the process until the message is complete.
+If the character is not present in the key, then a random character is selected, and that key is used for its location.
+That character selected from the key's ord is then multiplied by the character the user is encrypting's ord value.
 It finally gets the hash of the final result of the key after encryption as a unique identifier of that encryption.
 
 This method allows for the same key and the same message to have multiple encrypted versions while all decrypting to the
 same original message given the same initial key and message.
-
-NOTE: For characters not found in the key, as of {AD} 1.9.0, it will take a position of an unused character (a character
-in the key but not found in the message), and use its position as the base, then invert the ord and multiply by -1 as an
-indicator of it being a 'custom' character. This version of 'custom' character encryption will be changed to be more
-secure and reliable, as the current iteration doesn't always reliably work, many examples can be found in comments in
-{AD} which detail how it was made, what it was supposed to decrypt to, and what it actually decrypted to.
 
 ---
 
@@ -196,6 +434,36 @@ starts and ends.
 Finally, it creates a list to pass onto the loop portion of the function which will continue this process until the
 length parameter is met for the final key. The list passed onto the loop is the result of the first iteration but sliced
 into 4 equal length segments to then by hashed individually to repeat the process and expand the final key.
+
+---
+
+####`cmd_ln(args: list) -> dict`
+
+_Given a list of arguments from the command line, returns a dictionary of the program procedure and their values._
+
+>Parameter `args`: List of command line arguments sans "Apocrypha.py"
+>
+>Returns `dict`: Dictionary containing prompts 'pre-filled' by command line arguments.
+
+Processes a list of arguments which then builds a dictionary given each prompt of the program along with their values
+which is then later returned to be processed for functionality. If a given prompt/functional part of the program isn't
+used given a certain path the arguments follow, fields are by default None in the dictionary.
+
+Contains an internal function `err()` which is an error handling function which can run the main program if any command
+line arguments throws an error either in their own right, or from the `cmd_ln` function in its own right.
+
+---
+
+####`cmd_main(argvs: list) -> None`
+
+_The main program for the command line._
+
+>Parameter `argvs`: List of command line arguments sans "Apocrypha.py"
+>
+>Returns `None`: Calls other functions to carry out functionality as necessary.
+
+The `cmd_main` function passes the list of arguments to the `cmd_ln` function which the returned dictionary is used for
+processing the command line arguments as to what to do functionally.
 
 ---
 
