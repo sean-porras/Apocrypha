@@ -44,7 +44,7 @@ The `|` character will indicate where an input is requested from the user.
 ###How to encrypt with a custom message.
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: |
 ```
 
@@ -54,7 +54,7 @@ want to enter anything that begins with the letter `e`. Inputs here are _NOT_ ca
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: e
 eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: |
 ```
@@ -65,7 +65,7 @@ message, so we input `msg`. NOTE: Inputs here are _NOT_ case-sensitive.
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: e
 eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
 eA_key = |
@@ -76,7 +76,7 @@ Here you input what key you want to use for encrypting your message. This _IS_ c
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: e
 eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
 eA_key = This is a custom key
@@ -89,7 +89,7 @@ keyboard have been confirmed to work, and in theory, all Unicode characters shou
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: e
 eA_gen.type[<python{INT};apocrypha;custom{full;param};file;msg>]: msg
 eA_key = This is a custom key
@@ -114,7 +114,7 @@ hash of the key after encryption used to guarantee during decryption that the me
 ###How to decrypt with a custom message
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: |
 ```
 
@@ -124,7 +124,7 @@ want to enter anything that begins with the letter `d`. Inputs here are _NOT_ ca
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: d
 dA_k.format[<link{full;param};file;msg>]: |
 ```
@@ -135,7 +135,7 @@ message, so we input `msg`. NOTE: Inputs here are _NOT_ case-sensitive.
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: d
 dA_k.format[<link{full;param};file;msg>]: msg
 dA_key = |
@@ -146,7 +146,7 @@ Here you input what key you want to use for decrypting your message. This _IS_ c
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: d
 dA_k.format[<link{full;param};file;msg>]: msg
 dA_key = This is a custom key
@@ -159,7 +159,7 @@ Here is where you enter the encrypted message. It should, in a basic form, look 
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: d
 dA_k.format[<link{full;param};file;msg>]: msg
 dA_key = This is a custom key
@@ -185,7 +185,7 @@ matched, what they were, and what the initial key hash was.
 ####Using the config subsystem
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: |
 ```
 
@@ -195,7 +195,7 @@ want to enter anything that begins with the letter `c`. Inputs here are _NOT_ ca
 ---
 
 ```
-A_version: 1.9.3
+A_version: 1.9.4
 A_func<E;D;C>: c
 NOTE: Only a 'config.json' file in the same directory as Apocrypha.py will be accepted currently
 Config Handler Subsystem. Type 'help' for commands.
