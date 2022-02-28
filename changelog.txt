@@ -202,3 +202,27 @@ For the future implementation:
  @ Above changes made from {AD} 1.9.2 to {AD} 1.9.4 will be applied.
 {PLANS}
  ~ With this update, the Apocrypha.py 2.0 rewrite begins. When complete, a Java port will begin development.
+
+[Feb. 28, 2022]
+{AD} 1.9.4 ***
+ - Removed the dataclass package and usage with native Python class definition
+***NOTE: This change is functionally equivalent to the previous version 1.9.4,
+    thus there's no name change here, especially with the 2.0 rewrite in the works
+{SD} 1.1.1 (Version 7) ***
+***NOTE: Same changelog notes as above.
+{PLANS}
+ ~ Update to the plans as written from Feb. 2, the Java port is underway, being written in the same form the
+    Python 2.0 rewrite will take shape. The Java port will sadly not be compatible with the Python version in terms
+    of encryption and decryption currently due to library limitations, this may be reworked in the far future
+    for cross-compatibility, but this is far from a promise, more an acknowledgement that it could, but most likely
+    won't happen.
+ ~ In terms of progress on the Java port, the repository is currently private and will be made public when it is
+    finished. Currently, the equivalent of expanding_hash(), Aencode1(), and Adecode1() are complete.
+ ~ The Python Apocrypha 2.0 rewrite will likely begin once the Java port is complete, being used as a model for the
+    rewrite.
+ ~ The 2.0 rewrite won't simply be all current features but written in an Object-Oriented style, rather it'll implement
+    new features that required the rewrite, namely full command line program functionality, and updated documentation.
+    (We'll ignore that I could update documentation now, I'll do that retroactively for the final Version 7 release)
+ ~ Random new planned feature: Global flag [--default] to be able to run the program ignoring any existing config.json
+    file. We'll see if I can implement this, but: Could also then run without creating a config.json file if one doesn't
+    exist already given this global flag. Possible other flag names: [--noconfig, --defconfig, --dc, --nc]

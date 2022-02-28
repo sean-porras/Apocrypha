@@ -22,11 +22,9 @@ from pathlib import Path
 from math import floor, sqrt
 from string import ascii_letters
 from blake3 import blake3 as bl3
-from dataclasses import dataclass
 from base64 import b64encode as b64e
 
 
-@dataclass
 class Config:
     """
     The Config class object is used to create an easy library of attributes.
@@ -34,11 +32,15 @@ class Config:
 
     multi_in: default False. Dictates whether or not multiple runs of Apoc will be run on a single file
         containing commands for each separate result. ### CURRENTLY UNIMPLEMENTED ###
-    output: default 'print'. Dictates what form the output of Apoc will be given as. Currently
+    output: default 'print'. Dictates what form the output of Apoc will be given as. Currently,
         only supports printing the output. Future support for .txt, .json, and .apoc formats.
     """
     multi_in: bool = False
     output: str = "print"  # in ['print', '.txt', '.json', '.apoc']
+
+    def __init__(self, multi_in: bool, output: str):
+        self.multi_in = multi_in
+        self.output = output
 
 
 def config_subsys(cf: dict) -> dict:
